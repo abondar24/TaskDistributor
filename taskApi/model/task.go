@@ -1,11 +1,11 @@
 package model
 
 type Task struct {
-	ID         string
-	Name       string
-	Status     TaskStatus
-	CreateTime string
-	UpdateTime string
+	ID         string     `json:"id"`
+	Name       string     `json:"name"`
+	Status     TaskStatus `json:"status"`
+	CreateTime string     `json:"createdAt"`
+	UpdateTime string     `json:"updatedAt"`
 }
 
 type TaskStatus = string

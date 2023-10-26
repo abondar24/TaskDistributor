@@ -1,6 +1,6 @@
 package model
 
-type TaskResponse struct {
+type SendResponse struct {
 	ID string `json:"taskId"`
 }
 

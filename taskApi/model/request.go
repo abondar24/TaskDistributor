@@ -1,6 +1,5 @@
 package model
 
-type TypeRequest struct {
-	Name   string  `json:"taskName"`
-	Status *string `json:"taskStatus"`
+type SendRequest struct {
+	Name string `json:"taskName"`
 }

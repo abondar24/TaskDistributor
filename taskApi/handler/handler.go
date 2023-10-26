@@ -19,16 +19,16 @@ func InitSendHandler(ts *service.TaskService) *httptransport.Server {
 
 func initSendEndpoint(ts *service.TaskService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(model.TypeRequest)
+		req := request.(model.SendRequest)
 
-		id, err := ts.SendTask(req.Name, req.Status)
+		id, err := ts.CreateTask(req.Name)
 		if err != nil {
 			return model.ErrorResponse{
 				ERROR: err.Error(),
 			}, nil
 		}
 
-		return model.TaskResponse{ID: id}, nil
+		return model.SendResponse{ID: id}, nil
 	}
 }
 

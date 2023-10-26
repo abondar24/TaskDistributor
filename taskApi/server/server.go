@@ -24,7 +24,10 @@ func (s *Server) RunServer() {
 	taskHandler := handler.InitSendHandler(s.taskService)
 	healthHandler := handler.InitHealthHandler()
 
-	s.router.Methods("POST").Path("/tasks/send").Handler(taskHandler)
+	s.router.Methods("POST").Path("/task/create").Handler(taskHandler)
+	//TODO: add PUT endpoint to update task
+	//TODO: add DELETE endpoint to update task
+
 	s.router.Methods("GET").Path("/health").Handler(healthHandler)
 
 	http.Handle("/", s.router)

@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	//TODO add rabbitMQ
-	taskService := &service.TaskService{}
+	amqpService := service.NewAmqpService()
+	taskService := service.NewTaskService(amqpService)
 
 	srv := server.NewServer(taskService)
 	srv.RunServer()
