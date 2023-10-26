@@ -13,7 +13,7 @@ func InitSendHandler(ts *service.TaskService) *httptransport.Server {
 	return httptransport.NewServer(
 		initSendEndpoint(ts),
 		decodeTaskRequest,
-		encodeTaskResponse)
+		encodeResponse)
 
 }
 
@@ -29,5 +29,19 @@ func initSendEndpoint(ts *service.TaskService) endpoint.Endpoint {
 		}
 
 		return model.TaskResponse{ID: id}, nil
+	}
+}
+
+func InitHealthHandler() *httptransport.Server {
+	return httptransport.NewServer(
+		initHealthEndpoint(),
+		decodeHealthRequest,
+		encodeResponse)
+
+}
+
+func initHealthEndpoint() endpoint.Endpoint {
+	return func(_ context.Context, _ interface{}) (interface{}, error) {
+		return model.HealthResponse{MESSAGE: "TaskAPI is up"}, nil
 	}
 }

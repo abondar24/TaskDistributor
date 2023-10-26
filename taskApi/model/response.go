@@ -7,3 +7,7 @@ type TaskResponse struct {
 type ErrorResponse struct {
 	ERROR string `json:"error"`
 }
+
+type HealthResponse struct {
+	MESSAGE string `json:"message"`
+}

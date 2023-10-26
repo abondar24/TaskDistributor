@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/abondar24/TaskDisrtibutor/taskApi/handler"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/router"
 	"github.com/abondar24/TaskDisrtibutor/taskApi/service"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -12,12 +12,17 @@ func main() {
 	taskService := &service.TaskService{}
 
 	taskHandler := handler.InitSendHandler(taskService)
-	taskRouter := router.InitRouter()
-	taskRouter.AddTaskRoute(taskHandler)
+	healthHandler := handler.InitHealthHandler()
 
-	http.Handle("/tasks", taskHandler)
+	apiRouter := mux.NewRouter()
+
+	apiRouter.Methods("POST").Path("/tasks/send").Handler(taskHandler)
+	apiRouter.Methods("GET").Path("/health").Handler(healthHandler)
+
+	http.Handle("/", apiRouter)
 	err := http.ListenAndServe("localhost:8080", nil)
 	if err != nil {
+		panic(err)
 		return
 	}
 }

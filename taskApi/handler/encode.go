@@ -15,6 +15,10 @@ func decodeTaskRequest(_ context.Context, r *http.Request) (interface{}, error) 
 	return req, nil
 }
 
-func encodeTaskResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+func decodeHealthRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	return nil, nil
+}
+
+func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
 }
