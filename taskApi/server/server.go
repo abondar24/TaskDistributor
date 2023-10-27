@@ -21,11 +21,13 @@ func NewServer(taskService *service.TaskService) *Server {
 }
 
 func (s *Server) RunServer() {
-	taskHandler := handler.InitSendHandler(s.taskService)
+	createHandler := handler.InitCreateHandler(s.taskService)
+	updateHandler := handler.InitUpdateHandler(s.taskService)
+
 	healthHandler := handler.InitHealthHandler()
 
-	s.router.Methods("POST").Path("/task/create").Handler(taskHandler)
-	//TODO: add PUT endpoint to update task
+	s.router.Methods("POST").Path("/task/create").Handler(createHandler)
+	s.router.Methods("PUT").Path("/task/update/{id}").Handler(updateHandler)
 	//TODO: add DELETE endpoint to update task
 
 	s.router.Methods("GET").Path("/health").Handler(healthHandler)

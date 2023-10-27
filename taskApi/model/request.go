@@ -1,5 +1,6 @@
 package model
 
-type SendRequest struct {
+type TaskRequest struct {
 	Name string `json:"taskName"`
+	ID   string
 }

@@ -9,26 +9,48 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func InitSendHandler(ts *service.TaskService) *httptransport.Server {
+func InitCreateHandler(ts *service.TaskService) *httptransport.Server {
 	return httptransport.NewServer(
-		initSendEndpoint(ts),
+		initCreateEndpoint(ts),
 		decodeTaskRequest,
 		encodeResponse)
 
 }
 
-func initSendEndpoint(ts *service.TaskService) endpoint.Endpoint {
+func initCreateEndpoint(ts *service.TaskService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(model.SendRequest)
+		req := request.(model.TaskRequest)
 
-		id, err := ts.CreateTask(req.Name)
+		id, err := ts.CreateTask(&req.Name)
 		if err != nil {
 			return model.ErrorResponse{
 				ERROR: err.Error(),
 			}, nil
 		}
 
-		return model.SendResponse{ID: id}, nil
+		return model.TaskResponse{ID: id}, nil
+	}
+}
+
+func InitUpdateHandler(ts *service.TaskService) *httptransport.Server {
+	return httptransport.NewServer(
+		initUpdateEndpoint(ts),
+		decodeTaskRequest,
+		encodeResponse)
+
+}
+
+func initUpdateEndpoint(ts *service.TaskService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(model.TaskRequest)
+		err := ts.UpdateTask(&req.Name, &req.ID)
+		if err != nil {
+			return model.ErrorResponse{
+				ERROR: err.Error(),
+			}, nil
+		}
+
+		return nil, nil
 	}
 }
 

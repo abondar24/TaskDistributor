@@ -16,11 +16,11 @@ func NewTaskService(amqpService *AmqpService) *TaskService {
 	}
 }
 
-func (ts *TaskService) CreateTask(name string) (string, error) {
+func (ts *TaskService) CreateTask(name *string) (string, error) {
 	id := uuid.New().String()
 	task := &model.Task{
 		ID:         id,
-		Name:       name,
+		Name:       *name,
 		Status:     model.TASK_CREATED,
 		CreateTime: time.Now().String(),
 		UpdateTime: time.Now().String(),
@@ -29,4 +29,17 @@ func (ts *TaskService) CreateTask(name string) (string, error) {
 	err := ts.amqp.PublishToQueue(task)
 
 	return id, err
+}
+
+func (ts *TaskService) UpdateTask(name *string, id *string) error {
+	task := &model.Task{
+		ID:         *id,
+		Name:       *name,
+		Status:     model.TASK_UPDATED,
+		UpdateTime: time.Now().String(),
+	}
+
+	err := ts.amqp.PublishToQueue(task)
+
+	return err
 }
