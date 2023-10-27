@@ -43,7 +43,29 @@ func InitUpdateHandler(ts *service.TaskService) *httptransport.Server {
 func initUpdateEndpoint(ts *service.TaskService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(model.TaskRequest)
-		err := ts.UpdateTask(&req.Name, &req.ID)
+		err := ts.UpdateTask(&req.ID)
+		if err != nil {
+			return model.ErrorResponse{
+				ERROR: err.Error(),
+			}, nil
+		}
+
+		return nil, nil
+	}
+}
+
+func InitDeleteHandler(ts *service.TaskService) *httptransport.Server {
+	return httptransport.NewServer(
+		initDeleteEndpoint(ts),
+		decodeTaskRequest,
+		encodeResponse)
+
+}
+
+func initDeleteEndpoint(ts *service.TaskService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(model.TaskRequest)
+		err := ts.DeleteTask(&req.ID)
 		if err != nil {
 			return model.ErrorResponse{
 				ERROR: err.Error(),
