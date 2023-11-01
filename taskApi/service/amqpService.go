@@ -22,24 +22,11 @@ func NewAmqpService() *AmqpService {
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}
-	defer func(conn *amqp.Connection) {
-		err := conn.Close()
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-	}(conn)
 
 	ch, err := conn.Channel()
 	if err != nil {
 		log.Fatalf("Failed to open a channel: %v", err)
 	}
-
-	defer func(ch *amqp.Channel) {
-		err := ch.Close()
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-	}(ch)
 
 	return &AmqpService{
 		channel: ch,
@@ -47,12 +34,6 @@ func NewAmqpService() *AmqpService {
 }
 
 func (as *AmqpService) PublishToQueue(task *model.Task) error {
-	_, err := as.channel.QueueDeclare(QueueName, false, false, false, false, nil)
-	if err != nil {
-		log.Panicf("Failed to declare a queue: %v", err)
-		return err
-	}
-
 	message, err := serializeTask(task)
 	if err != nil {
 		return err
