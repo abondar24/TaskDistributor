@@ -33,9 +33,9 @@ func NewServer(requestHandler *handler.RequestHandler) *Server {
 
 func (s *Server) RunServer() {
 
-	s.router.HandleFunc("/task/create", s.requestHandler.CreateTaskHandler).Methods("POST")
-	s.router.HandleFunc("/task/update/{id}", s.requestHandler.UpdateTaskHandler).Methods("PUT")
-	s.router.HandleFunc("/task/delete/{id}", s.requestHandler.DeleteTaskHandler).Methods("DELETE")
+	s.router.HandleFunc("/task", s.requestHandler.CreateTaskHandler).Methods("POST")
+	s.router.HandleFunc("/task/{id}", s.requestHandler.UpdateTaskHandler).Methods("PUT")
+	s.router.HandleFunc("/task/{id}", s.requestHandler.DeleteTaskHandler).Methods("DELETE")
 	s.router.HandleFunc("/health", s.requestHandler.HealthHandler).Methods("GET")
 	s.router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 

@@ -42,7 +42,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/create": {
+        "/task": {
             "post": {
                 "description": "Create a new task and send it to the queue",
                 "consumes": [
@@ -76,29 +76,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/delete/{id}": {
-            "delete": {
-                "description": "Delete existing task",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Delete task",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Task ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/task/update/{id}": {
+        "/task/{id}": {
             "put": {
                 "description": "Change status of existing task",
                 "produces": [
@@ -118,9 +96,29 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Complete task",
+                        "description": "Complete task. Possible values: true/false",
                         "name": "complete",
                         "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Delete existing task",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Delete task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
                         "required": true
                     }
                 ],

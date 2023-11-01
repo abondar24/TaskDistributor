@@ -40,7 +40,7 @@ paths:
       summary: Health of service
       tags:
       - tasks
-  /task/create:
+  /task:
     post:
       consumes:
       - application/json
@@ -62,7 +62,7 @@ paths:
       summary: Create a new task
       tags:
       - tasks
-  /task/delete/{id}:
+  /task/{id}:
     delete:
       description: Delete existing task
       parameters:
@@ -77,7 +77,6 @@ paths:
       summary: Delete task
       tags:
       - tasks
-  /task/update/{id}:
     put:
       description: Change status of existing task
       parameters:
@@ -86,7 +85,7 @@ paths:
         name: id
         required: true
         type: string
-      - description: Complete task
+      - description: 'Complete task. Possible values: true/false'
         in: query
         name: complete
         required: true

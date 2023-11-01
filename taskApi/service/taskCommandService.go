@@ -7,10 +7,10 @@ import (
 )
 
 type TaskCommandService struct {
-	amqp *AmqpService
+	amqp QueueService
 }
 
-func NewTaskService(amqpService *AmqpService) *TaskCommandService {
+func NewTaskService(amqpService QueueService) *TaskCommandService {
 	return &TaskCommandService{
 		amqp: amqpService,
 	}

@@ -9,7 +9,7 @@ import (
 func main() {
 	amqpService := service.NewAmqpService()
 	taskService := service.NewTaskService(amqpService)
-	requestHandler := handler.NewHandler(taskService)
+	requestHandler := handler.NewRequestHandler(taskService)
 
 	srv := server.NewServer(requestHandler)
 	srv.RunServer()

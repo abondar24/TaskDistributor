@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/abondar24/TaskDisrtibutor/taskApi/model"
 	"github.com/abondar24/TaskDisrtibutor/taskApi/service"
 	"github.com/gorilla/mux"
@@ -11,10 +12,10 @@ import (
 )
 
 type RequestHandler struct {
-	taskService *service.TaskCommandService
+	taskService service.TaskService
 }
 
-func NewHandler(taskService *service.TaskCommandService) *RequestHandler {
+func NewRequestHandler(taskService service.TaskService) *RequestHandler {
 	return &RequestHandler{
 		taskService: taskService,
 	}
@@ -28,8 +29,8 @@ func NewHandler(taskService *service.TaskCommandService) *RequestHandler {
 // @Produce  json
 // @Param task body model.TaskRequest  true "Task name"
 // @Success 200 {object} model.TaskResponse
-// @BadRequest 400 {object} model.ErrorResponse
-// @Router /task/create [post]
+// @BadGateway 502 {object} model.ErrorResponse
+// @Router /task [post]
 func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -38,7 +39,8 @@ func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 
 	id, err := h.taskService.CreateTask(&task.Name)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, w, http.StatusBadGateway)
+		return
 	}
 
 	json.NewEncoder(w).Encode(model.TaskResponse{
@@ -52,23 +54,36 @@ func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Tags tasks
 // @Produce  json
 // @Param id path string true "Task ID"
-// @Param complete query string true "Complete task"
+// @Param complete query string true "Complete task. Possible values: true/false"
 // @BadRequest 400 {object} model.ErrorResponse
-// @Router /task/update/{id} [put]
+// @BadGateway 502 {object} model.ErrorResponse
+// @Router /task/{id} [put]
 func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	vars := mux.Vars(r)
-	id := vars["id"]
+	id, ok := vars["id"]
+	if !ok {
+		handleError(errors.New("missing ID"), w, http.StatusBadRequest)
+		return
+	}
 
-	complete, err := strconv.ParseBool(r.URL.Query()["complete"][0])
+	completeStr := r.URL.Query().Get("complete")
+	if completeStr == "" {
+		handleError(errors.New("missing 'complete' parameter"), w, http.StatusBadRequest)
+		return
+	}
+
+	complete, err := strconv.ParseBool(completeStr)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, w, http.StatusBadRequest)
+		return
 	}
 
 	err = h.taskService.UpdateTask(&id, &complete)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, w, http.StatusBadGateway)
+		return
 	}
 
 }
@@ -80,7 +95,8 @@ func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Produce  json
 // @Param id path string true "Task ID"
 // @BadRequest 400 {object} model.ErrorResponse
-// @Router /task/delete/{id} [delete]
+// @BadGateway 502 {object} model.ErrorResponse
+// @Router /task/{id} [delete]
 func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -89,7 +105,7 @@ func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Reques
 
 	err := h.taskService.DeleteTask(&id)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, w, http.StatusBadGateway)
 	}
 
 }
@@ -108,11 +124,11 @@ func (h *RequestHandler) HealthHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func handleError(err error, w http.ResponseWriter) {
+func handleError(err error, w http.ResponseWriter, errCode int) {
 	log.Println(err.Error())
 	errorResp := &model.ErrorResponse{
 		ERROR: err.Error(),
 	}
-	w.WriteHeader(400)
+	w.WriteHeader(errCode)
 	json.NewEncoder(w).Encode(errorResp)
 }
