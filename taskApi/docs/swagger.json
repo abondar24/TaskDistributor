@@ -1,0 +1,147 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Task API to send commands as tasks",
+        "title": "Task API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Alex",
+            "email": "abondar24@yahoo.com"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "Checks if service is up",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Health of service",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/create": {
+            "post": {
+                "description": "Create a new task and send it to the queue",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Create a new task",
+                "parameters": [
+                    {
+                        "description": "Create Task",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.TaskResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/delete": {
+            "delete": {
+                "description": "Delete existing task",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Delete task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Delete Task",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/task/update": {
+            "put": {
+                "description": "Change status of existing task",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Update task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Update Task",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "model.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TaskRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "taskName": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.TaskResponse": {
+            "type": "object",
+            "properties": {
+                "taskId": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
