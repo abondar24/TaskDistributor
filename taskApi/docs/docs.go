@@ -133,9 +133,6 @@ const docTemplate = `{
         "model.TaskRequest": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
                 "taskName": {
                     "type": "string"
                 }

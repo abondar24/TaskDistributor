@@ -3,21 +3,20 @@ package server
 import (
 	_ "github.com/abondar24/TaskDisrtibutor/taskApi/docs"
 	"github.com/abondar24/TaskDisrtibutor/taskApi/handler"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/service"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
 )
 
 type Server struct {
-	taskService *service.TaskCommandService
-	router      *mux.Router
+	requestHandler *handler.RequestHandler
+	router         *mux.Router
 }
 
-func NewServer(taskService *service.TaskCommandService) *Server {
+func NewServer(requestHandler *handler.RequestHandler) *Server {
 	apiRouter := mux.NewRouter().StrictSlash(true)
 	return &Server{
-		taskService,
+		requestHandler,
 		apiRouter,
 	}
 }
@@ -33,17 +32,11 @@ func NewServer(taskService *service.TaskCommandService) *Server {
 // @BasePath /
 
 func (s *Server) RunServer() {
-	createHandler := handler.InitCreateHandler(s.taskService)
-	updateHandler := handler.InitUpdateHandler(s.taskService)
-	deleteHandler := handler.InitDeleteHandler(s.taskService)
 
-	healthHandler := handler.InitHealthHandler()
-
-	s.router.Methods("POST").Path("/task/create").Handler(createHandler)
-	s.router.Methods("PUT").Path("/task/update/{id}").Handler(updateHandler)
-	s.router.Methods("DELETE").Path("/task/delete/{id}").Handler(deleteHandler)
-
-	s.router.Methods("GET").Path("/health").Handler(healthHandler)
+	s.router.HandleFunc("/task/create", s.requestHandler.CreateTaskHandler).Methods("POST")
+	s.router.HandleFunc("/task/update/{id}", s.requestHandler.UpdateTaskHandler).Methods("PUT")
+	s.router.HandleFunc("/task/delete/{id}", s.requestHandler.DeleteTaskHandler).Methods("DELETE")
+	s.router.HandleFunc("/health", s.requestHandler.HealthHandler).Methods("GET")
 
 	//todo - add endpoint for completeing task(update can be extended too)
 

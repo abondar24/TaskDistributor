@@ -1,23 +1,25 @@
 package handler
 
 import (
-	"context"
+	"encoding/json"
 	"github.com/abondar24/TaskDisrtibutor/taskApi/model"
 	"github.com/abondar24/TaskDisrtibutor/taskApi/service"
-
-	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/mux"
+	"log"
+	"net/http"
 )
 
-func InitCreateHandler(ts *service.TaskCommandService) *httptransport.Server {
-	return httptransport.NewServer(
-		initCreateEndpoint(ts),
-		decodeTaskRequest,
-		encodeResponse)
-
+type RequestHandler struct {
+	taskService *service.TaskCommandService
 }
 
-// CreateTask godoc
+func NewHandler(taskService *service.TaskCommandService) *RequestHandler {
+	return &RequestHandler{
+		taskService: taskService,
+	}
+}
+
+// CreateTaskHandler godoc
 // @Summary Create a new task
 // @Description Create a new task and send it to the queue
 // @Tags tasks
@@ -27,30 +29,23 @@ func InitCreateHandler(ts *service.TaskCommandService) *httptransport.Server {
 // @Success 200 {object} model.TaskResponse
 // @BadRequest 400 {object} model.ErrorResponse
 // @Router /task/create [post]
-func initCreateEndpoint(ts *service.TaskCommandService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(model.TaskRequest)
+func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
-		id, err := ts.CreateTask(&req.Name)
-		if err != nil {
-			return model.ErrorResponse{
-				ERROR: err.Error(),
-			}, nil
-		}
+	var task model.TaskRequest
+	err := json.NewDecoder(r.Body).Decode(&task)
 
-		return model.TaskResponse{ID: id}, nil
+	id, err := h.taskService.CreateTask(&task.Name)
+	if err != nil {
+		handleError(err, w)
 	}
+
+	json.NewEncoder(w).Encode(model.TaskResponse{
+		ID: id,
+	})
 }
 
-func InitUpdateHandler(ts *service.TaskCommandService) *httptransport.Server {
-	return httptransport.NewServer(
-		initUpdateEndpoint(ts),
-		decodeTaskRequest,
-		encodeResponse)
-
-}
-
-// UpdateTask godoc
+// UpdateTaskHandler godoc
 // @Summary Update task
 // @Description Change status of existing task
 // @Tags tasks
@@ -58,29 +53,20 @@ func InitUpdateHandler(ts *service.TaskCommandService) *httptransport.Server {
 // @Param id path string true "Update Task"
 // @BadRequest 400 {object} model.ErrorResponse
 // @Router /task/update [put]
-func initUpdateEndpoint(ts *service.TaskCommandService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(model.TaskRequest)
-		err := ts.UpdateTask(&req.ID)
-		if err != nil {
-			return model.ErrorResponse{
-				ERROR: err.Error(),
-			}, nil
-		}
+func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
-		return nil, nil
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	err := h.taskService.UpdateTask(&id)
+	if err != nil {
+		handleError(err, w)
 	}
-}
-
-func InitDeleteHandler(ts *service.TaskCommandService) *httptransport.Server {
-	return httptransport.NewServer(
-		initDeleteEndpoint(ts),
-		decodeTaskRequest,
-		encodeResponse)
 
 }
 
-// DeleteTask godoc
+// DeleteTaskHandler godoc
 // @Summary Delete task
 // @Description Delete existing task
 // @Tags tasks
@@ -88,37 +74,37 @@ func InitDeleteHandler(ts *service.TaskCommandService) *httptransport.Server {
 // @Param id path string true "Delete Task"
 // @BadRequest 400 {object} model.ErrorResponse
 // @Router /task/delete [delete]
-func initDeleteEndpoint(ts *service.TaskCommandService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(model.TaskRequest)
-		err := ts.DeleteTask(&req.ID)
-		if err != nil {
-			return model.ErrorResponse{
-				ERROR: err.Error(),
-			}, nil
-		}
+func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
-		return nil, nil
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	err := h.taskService.DeleteTask(&id)
+	if err != nil {
+		handleError(err, w)
 	}
-}
-
-func InitHealthHandler() *httptransport.Server {
-	return httptransport.NewServer(
-		initHealthEndpoint(),
-		decodeHealthRequest,
-		encodeResponse)
 
 }
 
-// Healthcheck godoc
+// HealthHandler godoc
 // @Summary Health of service
 // @Description Checks if service is up
 // @Tags tasks
 // @Produce  json
 // @Success 200 {object} model.HealthResponse
 // @Router /health [get]
-func initHealthEndpoint() endpoint.Endpoint {
-	return func(_ context.Context, _ interface{}) (interface{}, error) {
-		return model.HealthResponse{MESSAGE: "TaskAPI is up"}, nil
+func (h *RequestHandler) HealthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(model.HealthResponse{MESSAGE: "TaskAPI is up"})
+
+}
+
+func handleError(err error, w http.ResponseWriter) {
+	log.Println(err.Error())
+	errorResp := &model.ErrorResponse{
+		ERROR: err.Error(),
 	}
+	json.NewEncoder(w).Encode(errorResp)
 }

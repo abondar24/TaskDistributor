@@ -7,8 +7,6 @@ definitions:
     type: object
   model.TaskRequest:
     properties:
-      id:
-        type: string
       taskName:
         type: string
     type: object
