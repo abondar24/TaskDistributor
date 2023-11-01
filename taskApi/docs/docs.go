@@ -57,7 +57,7 @@ const docTemplate = `{
                 "summary": "Create a new task",
                 "parameters": [
                     {
-                        "description": "Create Task",
+                        "description": "Task name",
                         "name": "task",
                         "in": "body",
                         "required": true,
@@ -76,7 +76,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/task/delete": {
+        "/task/delete/{id}": {
             "delete": {
                 "description": "Delete existing task",
                 "produces": [
@@ -89,7 +89,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Delete Task",
+                        "description": "Task ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -98,7 +98,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/task/update": {
+        "/task/update/{id}": {
             "put": {
                 "description": "Change status of existing task",
                 "produces": [
@@ -111,9 +111,16 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Update Task",
+                        "description": "Task ID",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Complete task",
+                        "name": "complete",
+                        "in": "query",
                         "required": true
                     }
                 ],

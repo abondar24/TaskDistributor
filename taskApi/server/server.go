@@ -37,9 +37,6 @@ func (s *Server) RunServer() {
 	s.router.HandleFunc("/task/update/{id}", s.requestHandler.UpdateTaskHandler).Methods("PUT")
 	s.router.HandleFunc("/task/delete/{id}", s.requestHandler.DeleteTaskHandler).Methods("DELETE")
 	s.router.HandleFunc("/health", s.requestHandler.HealthHandler).Methods("GET")
-
-	//todo - add endpoint for completeing task(update can be extended too)
-
 	s.router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 
 	http.Handle("/", s.router)

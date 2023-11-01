@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type RequestHandler struct {
@@ -25,7 +26,7 @@ func NewHandler(taskService *service.TaskCommandService) *RequestHandler {
 // @Tags tasks
 // @Accept  json
 // @Produce  json
-// @Param task body model.TaskRequest true "Create Task"
+// @Param task body model.TaskRequest  true "Task name"
 // @Success 200 {object} model.TaskResponse
 // @BadRequest 400 {object} model.ErrorResponse
 // @Router /task/create [post]
@@ -50,16 +51,22 @@ func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Description Change status of existing task
 // @Tags tasks
 // @Produce  json
-// @Param id path string true "Update Task"
+// @Param id path string true "Task ID"
+// @Param complete query string true "Complete task"
 // @BadRequest 400 {object} model.ErrorResponse
-// @Router /task/update [put]
+// @Router /task/update/{id} [put]
 func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	err := h.taskService.UpdateTask(&id)
+	complete, err := strconv.ParseBool(r.URL.Query()["complete"][0])
+	if err != nil {
+		handleError(err, w)
+	}
+
+	err = h.taskService.UpdateTask(&id, &complete)
 	if err != nil {
 		handleError(err, w)
 	}
@@ -71,9 +78,9 @@ func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Description Delete existing task
 // @Tags tasks
 // @Produce  json
-// @Param id path string true "Delete Task"
+// @Param id path string true "Task ID"
 // @BadRequest 400 {object} model.ErrorResponse
-// @Router /task/delete [delete]
+// @Router /task/delete/{id} [delete]
 func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -106,5 +113,6 @@ func handleError(err error, w http.ResponseWriter) {
 	errorResp := &model.ErrorResponse{
 		ERROR: err.Error(),
 	}
+	w.WriteHeader(400)
 	json.NewEncoder(w).Encode(errorResp)
 }

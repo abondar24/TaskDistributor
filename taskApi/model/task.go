@@ -14,4 +14,6 @@ const (
 	TASK_CREATED TaskStatus = "created"
 	TASK_UPDATED TaskStatus = "updated"
 	TASK_DELETED TaskStatus = "deleted"
+
+	TASK_COMPLETED TaskStatus = "completed"
 )
