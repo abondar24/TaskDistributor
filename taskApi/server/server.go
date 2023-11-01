@@ -8,11 +8,11 @@ import (
 )
 
 type Server struct {
-	taskService *service.TaskService
+	taskService *service.TaskCommandService
 	router      *mux.Router
 }
 
-func NewServer(taskService *service.TaskService) *Server {
+func NewServer(taskService *service.TaskCommandService) *Server {
 	apiRouter := mux.NewRouter().StrictSlash(true)
 	return &Server{
 		taskService,

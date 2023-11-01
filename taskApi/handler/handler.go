@@ -9,7 +9,7 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func InitCreateHandler(ts *service.TaskService) *httptransport.Server {
+func InitCreateHandler(ts *service.TaskCommandService) *httptransport.Server {
 	return httptransport.NewServer(
 		initCreateEndpoint(ts),
 		decodeTaskRequest,
@@ -17,7 +17,7 @@ func InitCreateHandler(ts *service.TaskService) *httptransport.Server {
 
 }
 
-func initCreateEndpoint(ts *service.TaskService) endpoint.Endpoint {
+func initCreateEndpoint(ts *service.TaskCommandService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(model.TaskRequest)
 
@@ -32,7 +32,7 @@ func initCreateEndpoint(ts *service.TaskService) endpoint.Endpoint {
 	}
 }
 
-func InitUpdateHandler(ts *service.TaskService) *httptransport.Server {
+func InitUpdateHandler(ts *service.TaskCommandService) *httptransport.Server {
 	return httptransport.NewServer(
 		initUpdateEndpoint(ts),
 		decodeTaskRequest,
@@ -40,7 +40,7 @@ func InitUpdateHandler(ts *service.TaskService) *httptransport.Server {
 
 }
 
-func initUpdateEndpoint(ts *service.TaskService) endpoint.Endpoint {
+func initUpdateEndpoint(ts *service.TaskCommandService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(model.TaskRequest)
 		err := ts.UpdateTask(&req.ID)
@@ -54,7 +54,7 @@ func initUpdateEndpoint(ts *service.TaskService) endpoint.Endpoint {
 	}
 }
 
-func InitDeleteHandler(ts *service.TaskService) *httptransport.Server {
+func InitDeleteHandler(ts *service.TaskCommandService) *httptransport.Server {
 	return httptransport.NewServer(
 		initDeleteEndpoint(ts),
 		decodeTaskRequest,
@@ -62,7 +62,7 @@ func InitDeleteHandler(ts *service.TaskService) *httptransport.Server {
 
 }
 
-func initDeleteEndpoint(ts *service.TaskService) endpoint.Endpoint {
+func initDeleteEndpoint(ts *service.TaskCommandService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(model.TaskRequest)
 		err := ts.DeleteTask(&req.ID)
