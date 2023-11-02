@@ -13,8 +13,8 @@ import (
 
 func main() {
 	conf := readConfig()
-	amqpService := queue.NewAmqpProducer(conf)
-	taskService := service.NewTaskService(amqpService)
+	amqpProducer := queue.NewAmqpProducer(conf)
+	taskService := service.NewTaskService(amqpProducer)
 	requestHandler := handler.NewRequestHandler(taskService)
 
 	srv := server.NewServer(requestHandler)

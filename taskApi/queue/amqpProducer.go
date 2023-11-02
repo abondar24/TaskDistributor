@@ -29,6 +29,15 @@ func NewAmqpProducer(conf *config.Config) *AmqpProducer {
 		log.Fatalf("Failed to open a channel: %v", err)
 	}
 
+	_, err = ch.QueueDeclare(
+		conf.Broker.QueueName, // name
+		false,                 // durable
+		false,                 // delete when unused
+		false,                 // exclusive
+		false,                 // no-wait
+		nil,                   // arguments
+	)
+
 	return &AmqpProducer{
 		channel:   ch,
 		queueName: &conf.Broker.QueueName,

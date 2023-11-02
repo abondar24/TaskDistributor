@@ -33,3 +33,6 @@ Both require mockgen and swag installed to the system via go install
 ## External services
 
 1. RabbitMQ - runs on default port with credentials "admin:admin217"
+
+## Health
+Each microservice has /health endpoint to make sure it started 
