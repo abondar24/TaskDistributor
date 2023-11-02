@@ -28,6 +28,7 @@ require (
 )
 
 require (
+	github.com/abondar24/TaskDistributor/taskData v0.0.0-20231102131128-2be88c9f25d2
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.8.4

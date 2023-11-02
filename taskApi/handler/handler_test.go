@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/abondar24/TaskDistributor/taskApi/model"
 	"github.com/abondar24/TaskDistributor/taskApi/service"
+	"github.com/abondar24/TaskDistributor/taskData/response"
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
@@ -241,7 +242,7 @@ func TestRequestHandler_HealthHandler(t *testing.T) {
 			rr.Code, http.StatusOK)
 	}
 
-	var healthResp model.HealthResponse
+	var healthResp response.HealthResponse
 	err = json.Unmarshal(rr.Body.Bytes(), &healthResp)
 	if err != nil {
 		t.Fatal(err)

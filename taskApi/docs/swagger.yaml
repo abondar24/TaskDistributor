@@ -1,10 +1,5 @@
 basePath: /
 definitions:
-  model.HealthResponse:
-    properties:
-      message:
-        type: string
-    type: object
   model.TaskRequest:
     properties:
       taskName:
@@ -27,19 +22,6 @@ info:
   title: Task API
   version: "1.0"
 paths:
-  /health:
-    get:
-      description: Checks if service is up
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.HealthResponse'
-      summary: Health of service
-      tags:
-      - tasks
   /task:
     post:
       consumes:

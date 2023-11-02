@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/abondar24/TaskDistributor/taskApi/model"
 	"github.com/abondar24/TaskDistributor/taskApi/service"
+	"github.com/abondar24/TaskDistributor/taskData/response"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -110,17 +111,10 @@ func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Reques
 
 }
 
-// HealthHandler godoc
-// @Summary Health of service
-// @Description Checks if service is up
-// @Tags tasks
-// @Produce  json
-// @Success 200 {object} model.HealthResponse
-// @Router /health [get]
 func (h *RequestHandler) HealthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(model.HealthResponse{MESSAGE: "TaskAPI is up"})
+	json.NewEncoder(w).Encode(response.HealthResponse{MESSAGE: "TaskAPI is up"})
 
 }
 

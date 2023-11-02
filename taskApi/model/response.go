@@ -9,8 +9,3 @@ type TaskResponse struct {
 type ErrorResponse struct {
 	ERROR string `json:"error"`
 }
-
-// HealthResponse Healthcheck response
-type HealthResponse struct {
-	MESSAGE string `json:"message"`
-}

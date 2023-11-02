@@ -22,26 +22,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/health": {
-            "get": {
-                "description": "Checks if service is up",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "Health of service",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.HealthResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/task": {
             "post": {
                 "description": "Create a new task and send it to the queue",
@@ -127,14 +107,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.HealthResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "model.TaskRequest": {
             "type": "object",
             "properties": {
