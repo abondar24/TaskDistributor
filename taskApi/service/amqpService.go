@@ -5,20 +5,21 @@ import (
 	"context"
 	"encoding/gob"
 	"github.com/abondar24/TaskDistributor/taskApi/model"
+	"github.com/abondar24/TaskDistributor/taskData/config"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
+	"strconv"
+	"strings"
 )
 
 type AmqpService struct {
 	channel *amqp.Channel
+	conf    *config.Config
 }
 
-const (
-	QueueName = "taskQueue"
-)
+func NewAmqpService(conf *config.Config) *AmqpService {
 
-func NewAmqpService() *AmqpService {
-	conn, err := amqp.Dial("amqp://admin:admin217@localhost:5672/")
+	conn, err := amqp.Dial(buildConnectionUri(conf))
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}
@@ -33,6 +34,22 @@ func NewAmqpService() *AmqpService {
 	}
 }
 
+func buildConnectionUri(conf *config.Config) string {
+	var uri strings.Builder
+
+	uri.WriteString("amqp://")
+	uri.WriteString(conf.Broker.Username)
+	uri.WriteString(":")
+	uri.WriteString(conf.Broker.Password)
+	uri.WriteString("@")
+	uri.WriteString(conf.Broker.Host)
+	uri.WriteString(":")
+	uri.WriteString(strconv.Itoa(conf.Broker.Port))
+	uri.WriteString("/")
+
+	return uri.String()
+}
+
 func (as *AmqpService) PublishToQueue(task *model.Task) error {
 	message, err := serializeTask(task)
 	if err != nil {
@@ -40,7 +57,7 @@ func (as *AmqpService) PublishToQueue(task *model.Task) error {
 	}
 
 	ctx := context.Background()
-	err = as.channel.PublishWithContext(ctx, "", QueueName, false, false, amqp.Publishing{
+	err = as.channel.PublishWithContext(ctx, "", as.conf.Broker.QueueName, false, false, amqp.Publishing{
 		ContentType: "application/json",
 		Body:        message,
 	})

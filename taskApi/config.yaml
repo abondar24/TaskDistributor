@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+broker:
+   username: admin
+   password: admin217
+   queuename: taskQueue
+   host: localhost
+   port: 5672
