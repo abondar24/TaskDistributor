@@ -13,8 +13,8 @@ import (
 )
 
 type AmqpProducer struct {
-	channel *amqp.Channel
-	conf    *config.Config
+	channel   *amqp.Channel
+	queueName *string
 }
 
 func NewAmqpProducer(conf *config.Config) *AmqpProducer {
@@ -30,7 +30,8 @@ func NewAmqpProducer(conf *config.Config) *AmqpProducer {
 	}
 
 	return &AmqpProducer{
-		channel: ch,
+		channel:   ch,
+		queueName: &conf.Broker.QueueName,
 	}
 }
 
@@ -57,7 +58,7 @@ func (as *AmqpProducer) PublishToQueue(task *model.Task) error {
 	}
 
 	ctx := context.Background()
-	err = as.channel.PublishWithContext(ctx, "", as.conf.Broker.QueueName, false, false, amqp.Publishing{
+	err = as.channel.PublishWithContext(ctx, "", *as.queueName, false, false, amqp.Publishing{
 		ContentType: "application/json",
 		Body:        message,
 	})
