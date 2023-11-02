@@ -18,12 +18,12 @@ func NewHealth() *Health {
 	}
 }
 
-func (h *Health) RunServer() {
+func (h *Health) RunServer(port string) {
 
 	h.router.HandleFunc("/health", healthHandler).Methods("GET")
 
 	http.Handle("/", h.router)
-	err := http.ListenAndServe("localhost:8081", nil)
+	err := http.ListenAndServe("localhost:"+port, nil)
 	if err != nil {
 		panic(err)
 		return
