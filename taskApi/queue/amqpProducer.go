@@ -1,4 +1,4 @@
-package service
+package queue
 
 import (
 	"bytes"
@@ -12,12 +12,12 @@ import (
 	"strings"
 )
 
-type AmqpService struct {
+type AmqpProducer struct {
 	channel *amqp.Channel
 	conf    *config.Config
 }
 
-func NewAmqpService(conf *config.Config) *AmqpService {
+func NewAmqpProducer(conf *config.Config) *AmqpProducer {
 
 	conn, err := amqp.Dial(buildConnectionUri(conf))
 	if err != nil {
@@ -29,7 +29,7 @@ func NewAmqpService(conf *config.Config) *AmqpService {
 		log.Fatalf("Failed to open a channel: %v", err)
 	}
 
-	return &AmqpService{
+	return &AmqpProducer{
 		channel: ch,
 	}
 }
@@ -50,7 +50,7 @@ func buildConnectionUri(conf *config.Config) string {
 	return uri.String()
 }
 
-func (as *AmqpService) PublishToQueue(task *model.Task) error {
+func (as *AmqpProducer) PublishToQueue(task *model.Task) error {
 	message, err := serializeTask(task)
 	if err != nil {
 		return err

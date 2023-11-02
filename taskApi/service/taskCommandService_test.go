@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"github.com/abondar24/TaskDistributor/taskApi/queue"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -11,7 +12,7 @@ func TestTaskCommandService_CreateTask(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	amqpService := NewMockQueueService(ctrl)
+	amqpService := queue.NewMockProducer(ctrl)
 	amqpService.EXPECT().PublishToQueue(gomock.Any()).Return(nil)
 
 	taskService := NewTaskService(amqpService)
@@ -29,7 +30,7 @@ func TestTaskCommandService_CreateTaskError(t *testing.T) {
 	defer ctrl.Finish()
 
 	err := errors.New("some error")
-	amqpService := NewMockQueueService(ctrl)
+	amqpService := queue.NewMockProducer(ctrl)
 	amqpService.EXPECT().PublishToQueue(gomock.Any()).Return(err)
 
 	taskService := NewTaskService(amqpService)
@@ -47,7 +48,7 @@ func TestTaskCommandService_UpdateTask(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	amqpService := NewMockQueueService(ctrl)
+	amqpService := queue.NewMockProducer(ctrl)
 	amqpService.EXPECT().PublishToQueue(gomock.Any()).Return(nil)
 
 	taskService := NewTaskService(amqpService)
@@ -63,7 +64,7 @@ func TestTaskCommandService_DeleteTask(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	amqpService := NewMockQueueService(ctrl)
+	amqpService := queue.NewMockProducer(ctrl)
 	amqpService.EXPECT().PublishToQueue(gomock.Any()).Return(nil)
 
 	taskService := NewTaskService(amqpService)

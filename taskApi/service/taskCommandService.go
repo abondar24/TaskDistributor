@@ -2,15 +2,16 @@ package service
 
 import (
 	"github.com/abondar24/TaskDistributor/taskApi/model"
+	"github.com/abondar24/TaskDistributor/taskApi/queue"
 	"github.com/google/uuid"
 	"time"
 )
 
 type TaskCommandService struct {
-	amqp QueueService
+	amqp queue.Producer
 }
 
-func NewTaskService(amqpService QueueService) *TaskCommandService {
+func NewTaskService(amqpService queue.Producer) *TaskCommandService {
 	return &TaskCommandService{
 		amqp: amqpService,
 	}
