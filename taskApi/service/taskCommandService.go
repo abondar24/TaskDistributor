@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/abondar24/TaskDisrtibutor/taskApi/model"
+	"github.com/abondar24/TaskDistributor/taskApi/model"
 	"github.com/google/uuid"
 	"time"
 )

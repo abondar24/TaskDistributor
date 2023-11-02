@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/model"
+	"github.com/abondar24/TaskDistributor/taskApi/model"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 )

@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/model"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/service"
+	"github.com/abondar24/TaskDistributor/taskApi/model"
+	"github.com/abondar24/TaskDistributor/taskApi/service"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

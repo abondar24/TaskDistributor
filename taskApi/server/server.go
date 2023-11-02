@@ -1,8 +1,8 @@
 package server
 
 import (
-	_ "github.com/abondar24/TaskDisrtibutor/taskApi/docs"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/handler"
+	_ "github.com/abondar24/TaskDistributor/taskApi/docs"
+	"github.com/abondar24/TaskDistributor/taskApi/handler"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
