@@ -1,4 +1,4 @@
-module github.com/abondar24/TaskDisrtibutor/taskApi
+module github.com/abondar24/TaskDistributor/taskApi
 
 go 1.21.3
 
