@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/abondar24/TaskDisrtibutor/taskApi/handler"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/server"
-	"github.com/abondar24/TaskDisrtibutor/taskApi/service"
+	"github.com/abondar24/TaskDistributor/taskApi/handler"
+	"github.com/abondar24/TaskDistributor/taskApi/server"
+	"github.com/abondar24/TaskDistributor/taskApi/service"
 )
 
 func main() {

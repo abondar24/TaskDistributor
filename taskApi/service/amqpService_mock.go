@@ -7,7 +7,7 @@ package service
 import (
 	reflect "reflect"
 
-	model "github.com/abondar24/TaskDisrtibutor/taskApi/model"
+	model "github.com/abondar24/TaskDistributor/taskApi/model"
 	gomock "github.com/golang/mock/gomock"
 )
 
