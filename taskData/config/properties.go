@@ -13,10 +13,14 @@ type ServerConfig struct {
 type BrokerConfig struct {
 	Username  string
 	Password  string
+	Host      string
+	Port      int
 	QueueName string
 }
 
 type DatabaseConfig struct {
 	Username string
 	Password string
+	Host     string
+	Port     int
 }
