@@ -31,7 +31,7 @@ func NewServer(requestHandler *handler.RequestHandler) *Server {
 // @host localhost:8080
 // @BasePath /
 
-func (s *Server) RunServer() {
+func (s *Server) RunServer(port string) {
 
 	s.router.HandleFunc("/task", s.requestHandler.CreateTaskHandler).Methods("POST")
 	s.router.HandleFunc("/task/{id}", s.requestHandler.UpdateTaskHandler).Methods("PUT")
@@ -40,7 +40,7 @@ func (s *Server) RunServer() {
 	s.router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 
 	http.Handle("/", s.router)
-	err := http.ListenAndServe("localhost:8080", nil)
+	err := http.ListenAndServe("localhost:"+port, nil)
 	if err != nil {
 		panic(err)
 		return

@@ -7,6 +7,7 @@ import (
 	"github.com/abondar24/TaskDistributor/taskData/config"
 	"github.com/spf13/viper"
 	"log"
+	"strconv"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 	requestHandler := handler.NewRequestHandler(taskService)
 
 	srv := server.NewServer(requestHandler)
-	srv.RunServer()
+	srv.RunServer(strconv.Itoa(conf.Server.Port))
 }
 
 func readConfig() *config.Config {
