@@ -19,10 +19,11 @@ type BrokerConfig struct {
 }
 
 type DatabaseConfig struct {
-	Username string
-	Password string
-	Host     string
-	Port     int
-	Driver   string
-	Database string
+	Username      string
+	Password      string
+	Host          string
+	Port          int
+	Driver        string
+	Database      string
+	MigrationPath string
 }
