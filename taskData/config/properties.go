@@ -23,4 +23,5 @@ type DatabaseConfig struct {
 	Password string
 	Host     string
 	Port     int
+	Driver   string
 }
