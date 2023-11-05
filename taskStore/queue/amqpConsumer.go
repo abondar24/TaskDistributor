@@ -1,7 +1,9 @@
 package queue
 
 import (
+	"encoding/json"
 	"github.com/abondar24/TaskDistributor/taskData/config"
+	"github.com/abondar24/TaskDistributor/taskData/data"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"strconv"
@@ -74,6 +76,23 @@ func (al *AmqpConsumer) ReadFromQueue() {
 	}
 
 	for d := range msgs {
-		log.Printf("Received a message: %s\n", d.Body)
+
+		task, err := deserializeTask(d.Body)
+		if err != nil {
+			log.Fatalf("Failed to read data: %v", err)
+		}
+
+		log.Printf("Received a message: %s\n", task)
 	}
+}
+
+func deserializeTask(msgBody []byte) (*data.Task, error) {
+	var task data.Task
+	err := json.Unmarshal(msgBody, &task)
+	if err != nil {
+		log.Fatalf("Error: %s\n", err.Error())
+		return &data.Task{}, err
+	}
+
+	return &task, nil
 }

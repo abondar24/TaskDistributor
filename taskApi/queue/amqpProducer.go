@@ -1,9 +1,9 @@
 package queue
 
 import (
-	"bytes"
 	"context"
-	"encoding/gob"
+	"encoding/json"
+	"fmt"
 	"github.com/abondar24/TaskDistributor/taskData/config"
 	"github.com/abondar24/TaskDistributor/taskData/data"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -82,14 +82,11 @@ func (as *AmqpProducer) PublishToQueue(task *data.Task) error {
 }
 
 func serializeTask(task *data.Task) ([]byte, error) {
-	var buf bytes.Buffer
-	enc := gob.NewEncoder(&buf)
-
-	if err := enc.Encode(task); err != nil {
-		log.Println("Error encoding struct:", err)
-		return nil, err
+	msg, err := json.Marshal(task)
+	if err != nil {
+		fmt.Println("Error marshalling task:", err)
+		return []byte{}, err
 	}
 
-	byteSlice := buf.Bytes()
-	return byteSlice, nil
+	return msg, nil
 }
