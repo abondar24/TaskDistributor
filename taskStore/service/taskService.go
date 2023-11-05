@@ -11,7 +11,9 @@ type TaskSerivce struct {
 }
 
 type TaskService interface {
-	SaveTask(task *data.Task) error
+	//saveTask also updates UpdatedAt field in case of deletion or updateing
+	SaveUpdateTask(task *data.Task) error
+
 	GetTaskById(id *string) *data.Task
 	GetTasks(offset *int, limit *int) *[]data.Task
 	GetTasksByStatus(status *data.TaskStatus) *[]data.Task
@@ -25,7 +27,7 @@ func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao) *TaskSer
 	}
 }
 
-func (ts *TaskSerivce) SaveTask(task *data.Task) error {
+func (ts *TaskSerivce) SaveUpdateTask(task *data.Task) error {
 	return nil
 }
 

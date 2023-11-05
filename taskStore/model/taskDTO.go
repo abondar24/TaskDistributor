@@ -6,10 +6,10 @@ type TaskDTO struct {
 	TaskId    string
 	Name      string
 	CreatedAt string
-	UpdatedAt string
 }
 
 type TaskHistoryDTO struct {
-	ID     string
-	Status data.TaskStatus
+	ID        string
+	Status    data.TaskStatus
+	UpdatedAt string
 }
