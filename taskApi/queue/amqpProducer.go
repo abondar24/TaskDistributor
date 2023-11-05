@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
-	"github.com/abondar24/TaskDistributor/taskApi/model"
 	"github.com/abondar24/TaskDistributor/taskData/config"
+	"github.com/abondar24/TaskDistributor/taskData/data"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"strconv"
@@ -60,7 +60,7 @@ func buildConnectionUri(conf *config.Config) string {
 	return uri.String()
 }
 
-func (as *AmqpProducer) PublishToQueue(task *model.Task) error {
+func (as *AmqpProducer) PublishToQueue(task *data.Task) error {
 	message, err := serializeTask(task)
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func (as *AmqpProducer) PublishToQueue(task *model.Task) error {
 	}
 }
 
-func serializeTask(task *model.Task) ([]byte, error) {
+func serializeTask(task *data.Task) ([]byte, error) {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 

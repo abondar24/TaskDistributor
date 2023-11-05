@@ -1,7 +1,9 @@
 package queue
 
-import "github.com/abondar24/TaskDistributor/taskApi/model"
+import (
+	"github.com/abondar24/TaskDistributor/taskData/data"
+)
 
 type Producer interface {
-	PublishToQueue(task *model.Task) error
+	PublishToQueue(task *data.Task) error
 }

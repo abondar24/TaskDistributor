@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/abondar24/TaskDistributor/taskApi/model"
 	"github.com/abondar24/TaskDistributor/taskApi/queue"
+	"github.com/abondar24/TaskDistributor/taskData/data"
 	"github.com/google/uuid"
 	"time"
 )
@@ -19,10 +19,10 @@ func NewTaskService(amqpService queue.Producer) *TaskCommandService {
 
 func (ts *TaskCommandService) CreateTask(name *string) (string, error) {
 	id := uuid.New().String()
-	task := &model.Task{
+	task := &data.Task{
 		ID:         id,
 		Name:       *name,
-		Status:     model.TASK_CREATED,
+		Status:     data.TASK_CREATED,
 		CreateTime: time.Now().String(),
 		UpdateTime: time.Now().String(),
 	}
@@ -33,25 +33,25 @@ func (ts *TaskCommandService) CreateTask(name *string) (string, error) {
 }
 
 func (ts *TaskCommandService) UpdateTask(id *string, completed *bool) error {
-	task := &model.Task{
+	task := data.Task{
 		ID:         *id,
-		Status:     model.TASK_UPDATED,
+		Status:     data.TASK_UPDATED,
 		UpdateTime: time.Now().String(),
 	}
 
 	if *completed {
-		task.Status = model.TASK_COMPLETED
+		task.Status = data.TASK_COMPLETED
 	}
 
-	err := ts.amqp.PublishToQueue(task)
+	err := ts.amqp.PublishToQueue(&task)
 
 	return err
 }
 
 func (ts *TaskCommandService) DeleteTask(id *string) error {
-	task := &model.Task{
+	task := &data.Task{
 		ID:         *id,
-		Status:     model.TASK_DELETED,
+		Status:     data.TASK_DELETED,
 		UpdateTime: time.Now().String(),
 	}
 

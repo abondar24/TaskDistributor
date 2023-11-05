@@ -7,7 +7,7 @@ package queue
 import (
 	reflect "reflect"
 
-	model "github.com/abondar24/TaskDistributor/taskApi/model"
+	data "github.com/abondar24/TaskDistributor/taskData/data"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,7 +35,7 @@ func (m *MockProducer) EXPECT() *MockProducerMockRecorder {
 }
 
 // PublishToQueue mocks base method.
-func (m *MockProducer) PublishToQueue(task *model.Task) error {
+func (m *MockProducer) PublishToQueue(task *data.Task) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PublishToQueue", task)
 	ret0, _ := ret[0].(error)

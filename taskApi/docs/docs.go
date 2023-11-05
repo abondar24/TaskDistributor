@@ -42,7 +42,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.TaskRequest"
+                            "$ref": "#/definitions/data.TaskRequest"
                         }
                     }
                 ],
@@ -50,7 +50,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.TaskResponse"
+                            "$ref": "#/definitions/data.TaskResponse"
                         }
                     }
                 }
@@ -107,7 +107,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.TaskRequest": {
+        "data.TaskRequest": {
             "type": "object",
             "properties": {
                 "taskName": {
@@ -115,7 +115,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.TaskResponse": {
+        "data.TaskResponse": {
             "type": "object",
             "properties": {
                 "taskId": {
