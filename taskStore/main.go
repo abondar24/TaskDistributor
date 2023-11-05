@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/abondar24/TaskDistributor/taskData/config"
+	"github.com/abondar24/TaskDistributor/taskStore/dao"
 	"github.com/abondar24/TaskDistributor/taskStore/health"
 	"github.com/abondar24/TaskDistributor/taskStore/queue"
+	"github.com/abondar24/TaskDistributor/taskStore/service"
 	"github.com/spf13/viper"
 	"log"
 	"strconv"
@@ -12,7 +14,12 @@ import (
 func main() {
 	conf := readConfig()
 
-	amqpConsumer := queue.NewAmqpConsumer(conf)
+	db := dao.InitDatabase(conf)
+	taskDao := dao.NewTaskDao(db)
+	taskHistoryDao := dao.NewTaskHistoryDao(db)
+	taskService := service.NewTaskService(taskDao, taskHistoryDao)
+
+	amqpConsumer := queue.NewAmqpConsumer(conf, taskService)
 	go amqpConsumer.ReadFromQueue()
 
 	healthCheck := health.NewHealth()

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/abondar24/TaskDistributor/taskData/config"
 	"github.com/abondar24/TaskDistributor/taskData/data"
+	"github.com/abondar24/TaskDistributor/taskStore/service"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"strconv"
@@ -11,11 +12,12 @@ import (
 )
 
 type AmqpConsumer struct {
-	channel   *amqp.Channel
-	queueName *string
+	channel     *amqp.Channel
+	queueName   *string
+	taskService *service.TaskService
 }
 
-func NewAmqpConsumer(conf *config.Config) *AmqpConsumer {
+func NewAmqpConsumer(conf *config.Config, taskService service.TaskService) *AmqpConsumer {
 
 	conn, err := amqp.Dial(buildConnectionUri(conf))
 	if err != nil {
@@ -37,8 +39,9 @@ func NewAmqpConsumer(conf *config.Config) *AmqpConsumer {
 	)
 
 	return &AmqpConsumer{
-		channel:   ch,
-		queueName: &conf.Broker.QueueName,
+		channel:     ch,
+		queueName:   &conf.Broker.QueueName,
+		taskService: &taskService,
 	}
 }
 

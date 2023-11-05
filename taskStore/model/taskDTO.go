@@ -1,6 +1,15 @@
 package model
 
-type Task struct {
-	ID int64
-	//todo extends
+import "github.com/abondar24/TaskDistributor/taskData/data"
+
+type TaskDTO struct {
+	TaskId    string
+	Name      string
+	CreatedAt string
+	UpdatedAt string
+}
+
+type TaskHistoryDTO struct {
+	ID     string
+	Status data.TaskStatus
 }
