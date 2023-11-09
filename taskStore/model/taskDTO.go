@@ -9,8 +9,8 @@ type TaskDTO struct {
 }
 
 type TaskHistoryDTO struct {
-	ID        int64           `db:"id"`
+	Id        int64           `db:"id"`
 	TaskId    string          `db:"task_id"`
-	Status    data.TaskStatus `json:"status"`
+	Status    data.TaskStatus `db:"status"`
 	UpdatedAt string          `db:"updated_at"`
 }
