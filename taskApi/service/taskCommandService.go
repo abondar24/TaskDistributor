@@ -23,8 +23,8 @@ func (ts *TaskCommandService) CreateTask(name *string) (string, error) {
 		ID:         id,
 		Name:       *name,
 		Status:     data.TASK_CREATED,
-		CreateTime: time.Now().String(),
-		UpdateTime: time.Now().String(),
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
 	}
 
 	err := ts.amqp.PublishToQueue(task)
@@ -36,7 +36,7 @@ func (ts *TaskCommandService) UpdateTask(id *string, completed *bool) error {
 	task := data.Task{
 		ID:         *id,
 		Status:     data.TASK_UPDATED,
-		UpdateTime: time.Now().String(),
+		UpdateTime: time.Now(),
 	}
 
 	if *completed {
@@ -52,7 +52,7 @@ func (ts *TaskCommandService) DeleteTask(id *string) error {
 	task := &data.Task{
 		ID:         *id,
 		Status:     data.TASK_DELETED,
-		UpdateTime: time.Now().String(),
+		UpdateTime: time.Now(),
 	}
 
 	err := ts.amqp.PublishToQueue(task)
