@@ -6,27 +6,27 @@ import (
 	"github.com/abondar24/TaskDistributor/taskStore/model"
 )
 
-type TaskSerivce struct {
+type TaskDbService struct {
 	taskDAO        dao.TaskDao
 	taskHistoryDAO dao.TaskHistoryDao
 }
 
 type TaskService interface {
-	SaveTask(task *data.Task) error
+	SaveUpdateTask(task *data.Task) error
 
 	GetTaskById(id *string) (*data.Task, error)
 	GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int) ([]*data.Task, error)
 	GetTaskHistory(id *string) (*data.TaskHistory, error)
 }
 
-func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao) *TaskSerivce {
-	return &TaskSerivce{
+func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao) *TaskDbService {
+	return &TaskDbService{
 		taskDAO:        taskDao,
 		taskHistoryDAO: historyDao,
 	}
 }
 
-func (ts *TaskSerivce) SaveTask(task *data.Task) error {
+func (ts *TaskDbService) SaveUpdateTask(task *data.Task) error {
 
 	if task.Status == data.TASK_CREATED {
 		taskDTO := &model.TaskDTO{
@@ -54,7 +54,7 @@ func (ts *TaskSerivce) SaveTask(task *data.Task) error {
 	return nil
 }
 
-func (ts *TaskSerivce) GetTaskById(id *string) (*data.Task, error) {
+func (ts *TaskDbService) GetTaskById(id *string) (*data.Task, error) {
 	task, err := ts.taskDAO.GetTaskById(id)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (ts *TaskSerivce) GetTaskById(id *string) (*data.Task, error) {
 	return result, nil
 }
 
-func (ts *TaskSerivce) GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int) ([]*data.Task, error) {
+func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int) ([]*data.Task, error) {
 	result := make([]*data.Task, 0)
 
 	statusEntries, err := ts.taskHistoryDAO.GetTasksByStatus(status, offset, limit)
@@ -112,7 +112,7 @@ func (ts *TaskSerivce) GetTasksByStatus(status *data.TaskStatus, offset *int, li
 	return result, nil
 }
 
-func (ts *TaskSerivce) GetTaskHistory(id *string) (*data.TaskHistory, error) {
+func (ts *TaskDbService) GetTaskHistory(id *string) (*data.TaskHistory, error) {
 	task, err := ts.taskDAO.GetTaskById(id)
 	if err != nil {
 		return nil, err

@@ -14,7 +14,7 @@ import (
 type AmqpConsumer struct {
 	channel     *amqp.Channel
 	queueName   *string
-	taskService *service.TaskService
+	taskService service.TaskService
 }
 
 func NewAmqpConsumer(conf *config.Config, taskService service.TaskService) *AmqpConsumer {
@@ -41,7 +41,7 @@ func NewAmqpConsumer(conf *config.Config, taskService service.TaskService) *Amqp
 	return &AmqpConsumer{
 		channel:     ch,
 		queueName:   &conf.Broker.QueueName,
-		taskService: &taskService,
+		taskService: taskService,
 	}
 }
 
@@ -85,7 +85,13 @@ func (al *AmqpConsumer) ReadFromQueue() {
 			log.Fatalf("Failed to read data: %v", err)
 		}
 
-		log.Printf("Received a message: %s\n", task)
+		log.Printf("Recieved task with id %s\n", task.ID)
+
+		err = al.taskService.SaveUpdateTask(task)
+		if err != nil {
+			log.Fatalf("Failed to save data: %v", err)
+		}
+
 	}
 }
 
