@@ -15,9 +15,9 @@ func main() {
 	conf := readConfig()
 
 	db := dao.InitDatabase(conf)
-	taskDao := dao.NewTaskDao(db)
-	taskHistoryDao := dao.NewTaskHistoryDao(db)
-	taskService := service.NewTaskService(taskDao, taskHistoryDao)
+	taskDao := dao.NewTaskDao()
+	taskHistoryDao := dao.NewTaskHistoryDao()
+	taskService := service.NewTaskService(taskDao, taskHistoryDao, db)
 
 	amqpConsumer := queue.NewAmqpConsumer(conf, taskService)
 	go amqpConsumer.ReadFromQueue()

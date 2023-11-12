@@ -51,14 +51,15 @@ func (db *Database) BeginTx() (*sql.Tx, error) {
 
 	}
 
-	defer func(tx *sql.Tx) {
-		err := tx.Rollback()
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}(tx)
-
 	return tx, err
+}
+
+func (db *Database) RollbackTx(tx *sql.Tx) {
+	err := tx.Rollback()
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+
 }
 
 func (db *Database) CloseTx(tx *sql.Tx) error {

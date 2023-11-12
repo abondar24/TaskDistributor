@@ -23,7 +23,6 @@ func NewTaskHistoryDao() *TaskHistoryDaoImpl {
 	return &TaskHistoryDaoImpl{}
 }
 
-// TODO move out tx from here
 func (dao *TaskHistoryDaoImpl) SaveTaskEntry(entry *model.TaskHistoryDTO, tx *sql.Tx) error {
 
 	query := fmt.Sprintf("INSERT INTO task_history(task_id,status,updated_at)  VALUES ('%v','%v','%v')", entry.TaskId, entry.Status, entry.UpdatedAt)
@@ -41,7 +40,6 @@ func (dao *TaskHistoryDaoImpl) SaveTaskEntry(entry *model.TaskHistoryDTO, tx *sq
 
 	_, err = stmt.Exec()
 	if err != nil {
-		log.Println(err.Error())
 		return err
 	}
 

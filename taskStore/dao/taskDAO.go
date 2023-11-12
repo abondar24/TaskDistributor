@@ -22,7 +22,6 @@ func NewTaskDao() *TaskDaoImpl {
 	return &TaskDaoImpl{}
 }
 
-// TODO we need to run transactions in service not here
 func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO, tx *sql.Tx) error {
 
 	query := fmt.Sprintf("INSERT INTO task(id,name,created_at) VALUES ('%v','%v','%v')", task.Id, task.Name, task.CreatedAt)
@@ -41,11 +40,6 @@ func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO, tx *sql.Tx) error {
 	_, err = stmt.Exec()
 	if err != nil {
 		return err
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		log.Println(err.Error())
 	}
 
 	return nil

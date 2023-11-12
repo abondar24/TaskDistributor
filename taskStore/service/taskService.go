@@ -7,6 +7,7 @@ import (
 )
 
 type TaskDbService struct {
+	db             *dao.Database
 	taskDAO        dao.TaskDao
 	taskHistoryDAO dao.TaskHistoryDao
 }
@@ -19,14 +20,19 @@ type TaskService interface {
 	GetTaskHistory(id *string) (*data.TaskHistory, error)
 }
 
-func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao) *TaskDbService {
+func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao, database *dao.Database) *TaskDbService {
 	return &TaskDbService{
 		taskDAO:        taskDao,
 		taskHistoryDAO: historyDao,
+		db:             database,
 	}
 }
 
 func (ts *TaskDbService) SaveUpdateTask(task *data.Task) error {
+	tx, err := ts.db.BeginTx()
+	if err != nil {
+		return err
+	}
 
 	if task.Status == data.TASK_CREATED {
 		taskDTO := &model.TaskDTO{
@@ -34,8 +40,9 @@ func (ts *TaskDbService) SaveUpdateTask(task *data.Task) error {
 			Name:      task.Name,
 			CreatedAt: task.CreateTime,
 		}
-		err := ts.taskDAO.SaveTask(taskDTO)
+		err := ts.taskDAO.SaveTask(taskDTO, tx)
 		if err != nil {
+			ts.db.RollbackTx(tx)
 			return err
 		}
 	}
@@ -46,7 +53,13 @@ func (ts *TaskDbService) SaveUpdateTask(task *data.Task) error {
 		UpdatedAt: task.UpdateTime,
 	}
 
-	err := ts.taskHistoryDAO.SaveTaskEntry(taskHistoryEntry)
+	err = ts.taskHistoryDAO.SaveTaskEntry(taskHistoryEntry, tx)
+	if err != nil {
+		ts.db.RollbackTx(tx)
+		return err
+	}
+
+	err = ts.db.CloseTx(tx)
 	if err != nil {
 		return err
 	}
@@ -55,13 +68,20 @@ func (ts *TaskDbService) SaveUpdateTask(task *data.Task) error {
 }
 
 func (ts *TaskDbService) GetTaskById(id *string) (*data.Task, error) {
-	task, err := ts.taskDAO.GetTaskById(id)
+	tx, err := ts.db.BeginTx()
 	if err != nil {
 		return nil, err
 	}
 
-	taskEntry, err := ts.taskHistoryDAO.GetTaskById(id)
+	task, err := ts.taskDAO.GetTaskById(id, tx)
 	if err != nil {
+		ts.db.RollbackTx(tx)
+		return nil, err
+	}
+
+	taskEntry, err := ts.taskHistoryDAO.GetTaskById(id, tx)
+	if err != nil {
+		ts.db.RollbackTx(tx)
 		return nil, err
 	}
 
@@ -73,13 +93,25 @@ func (ts *TaskDbService) GetTaskById(id *string) (*data.Task, error) {
 		UpdateTime: taskEntry.UpdatedAt,
 	}
 
+	err = ts.db.CloseTx(tx)
+	if err != nil {
+		return nil, err
+	}
+
 	return result, nil
 }
 
 func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int) ([]*data.Task, error) {
 	result := make([]*data.Task, 0)
-	statusEntries, err := ts.taskHistoryDAO.GetTasksByStatus(status, offset, limit)
+
+	tx, err := ts.db.BeginTx()
 	if err != nil {
+		return nil, err
+	}
+
+	statusEntries, err := ts.taskHistoryDAO.GetTasksByStatus(status, offset, limit, tx)
+	if err != nil {
+		ts.db.RollbackTx(tx)
 		return nil, err
 	}
 
@@ -89,7 +121,13 @@ func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, 
 		ids = append(ids, &se.TaskId)
 	}
 
-	tasks, err := ts.taskDAO.GetTasksByIds(ids)
+	tasks, err := ts.taskDAO.GetTasksByIds(ids, tx)
+	if err != nil {
+		ts.db.RollbackTx(tx)
+		return nil, err
+	}
+
+	err = ts.db.CloseTx(tx)
 	if err != nil {
 		return nil, err
 	}
@@ -112,12 +150,24 @@ func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, 
 }
 
 func (ts *TaskDbService) GetTaskHistory(id *string) (*data.TaskHistory, error) {
-	task, err := ts.taskDAO.GetTaskById(id)
+	tx, err := ts.db.BeginTx()
 	if err != nil {
 		return nil, err
 	}
 
-	taskHistory, err := ts.taskHistoryDAO.GetTaskHistory(id)
+	task, err := ts.taskDAO.GetTaskById(id, tx)
+	if err != nil {
+		ts.db.RollbackTx(tx)
+		return nil, err
+	}
+
+	taskHistory, err := ts.taskHistoryDAO.GetTaskHistory(id, tx)
+	if err != nil {
+		ts.db.RollbackTx(tx)
+		return nil, err
+	}
+
+	err = ts.db.CloseTx(tx)
 	if err != nil {
 		return nil, err
 	}
