@@ -3,16 +3,16 @@ package dao
 import (
 	"database/sql"
 	"fmt"
-	"github.com/abondar24/TaskDistributor/taskData/data"
 	"github.com/abondar24/TaskDistributor/taskStore/model"
 	"log"
 )
 
 type TaskDao interface {
-	SaveTask(task *data.Task, tx *sql.Tx) error
+	SaveTask(task *model.TaskDTO) error
 
-	GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, error)
-	GetTasks(offset *int, limit *int, tx *sql.Tx) (*[]*model.TaskDTO, error)
+	GetTaskById(id *string) (*model.TaskDTO, error)
+
+	GetTasksByIds(ids []*string) (*[]*model.TaskDTO, error)
 }
 
 type TaskDaoImpl struct {
@@ -25,9 +25,13 @@ func NewTaskDao(database *Database) *TaskDaoImpl {
 	}
 }
 
-func (dao *TaskDaoImpl) SaveTask(task *data.Task, tx *sql.Tx) error {
+func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO) error {
+	tx, err := dao.db.BeginTx()
+	if err != nil {
+		return err
+	}
 
-	query := fmt.Sprintf("INSERT INTO task(id,name,created_at) VALUES ('%v','%v','%v')", task.ID, task.Name, task.CreateTime)
+	query := fmt.Sprintf("INSERT INTO task(id,name,created_at) VALUES ('%v','%v','%v')", task.Id, task.Name, task.CreatedAt)
 	stmt, err := tx.Prepare(query)
 	if err != nil {
 		return err
@@ -49,7 +53,11 @@ func (dao *TaskDaoImpl) SaveTask(task *data.Task, tx *sql.Tx) error {
 	return nil
 }
 
-func (dao *TaskDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, error) {
+func (dao *TaskDaoImpl) GetTaskById(id *string) (*model.TaskDTO, error) {
+	tx, err := dao.db.BeginTx()
+	if err != nil {
+		return nil, err
+	}
 
 	query := fmt.Sprintf("SELECT * FROM task WHERE id='%v'", id)
 
@@ -82,9 +90,13 @@ func (dao *TaskDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, err
 
 	return result, nil
 }
-func (dao *TaskDaoImpl) GetTasks(offset *int, limit *int, tx *sql.Tx) (*[]*model.TaskDTO, error) {
+func (dao *TaskDaoImpl) GetTasksByIds(ids []*string) (*[]*model.TaskDTO, error) {
+	tx, err := dao.db.BeginTx()
+	if err != nil {
+		return nil, err
+	}
 
-	query := fmt.Sprintf("SELECT * FROM task LIMIT %v OFFSET %v", limit, offset)
+	query := fmt.Sprintf("SELECT * FROM task WHERE id IN (%v)", ids)
 
 	result := make([]*model.TaskDTO, 0)
 
@@ -112,6 +124,7 @@ func (dao *TaskDaoImpl) GetTasks(offset *int, limit *int, tx *sql.Tx) (*[]*model
 		if err != nil {
 			return nil, err
 		}
+		result = append(result, &task)
 	}
 
 	return &result, nil
