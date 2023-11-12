@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS task (
     id VARCHAR(64) PRIMARY KEY NOT NULL,
     name VARCHAR(128) NOT NULL,
-    created_at DATE NOT NULL
+    created_at VARCHAR(50) NOT NULL
     );

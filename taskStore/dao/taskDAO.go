@@ -46,7 +46,6 @@ func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO) error {
 
 	_, err = stmt.Exec()
 	if err != nil {
-		log.Println(err.Error())
 		return err
 	}
 
@@ -77,7 +76,6 @@ func (dao *TaskDaoImpl) GetTaskById(id *string) (*model.TaskDTO, error) {
 
 	rows, err := stmt.Query()
 	if err != nil {
-		log.Println(err.Error())
 		return nil, err
 	}
 
@@ -114,7 +112,6 @@ func (dao *TaskDaoImpl) GetTasksByIds(ids []*string) (*[]*model.TaskDTO, error) 
 
 	rows, err := stmt.Query()
 	if err != nil {
-		log.Println(err.Error())
 		return nil, err
 	}
 
