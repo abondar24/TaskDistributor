@@ -8,36 +8,22 @@ import (
 )
 
 type TaskDao interface {
-	SaveTask(task *model.TaskDTO) error
+	SaveTask(task *model.TaskDTO, tx *sql.Tx) error
 
-	GetTaskById(id *string) (*model.TaskDTO, error)
+	GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, error)
 
-	GetTasksByIds(ids []*string) (*[]*model.TaskDTO, error)
+	GetTasksByIds(ids []*string, tx *sql.Tx) (*[]*model.TaskDTO, error)
 }
 
 type TaskDaoImpl struct {
-	db *Database
 }
 
-func NewTaskDao(database *Database) *TaskDaoImpl {
-	return &TaskDaoImpl{
-		db: database,
-	}
+func NewTaskDao() *TaskDaoImpl {
+	return &TaskDaoImpl{}
 }
 
 // TODO we need to run transactions in service not here
-func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO) error {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return err
-	}
-
-	defer func(tx *sql.Tx) {
-		err := tx.Rollback()
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}(tx)
+func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO, tx *sql.Tx) error {
 
 	query := fmt.Sprintf("INSERT INTO task(id,name,created_at) VALUES ('%v','%v','%v')", task.Id, task.Name, task.CreatedAt)
 	stmt, err := tx.Prepare(query)
@@ -65,11 +51,7 @@ func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO) error {
 	return nil
 }
 
-func (dao *TaskDaoImpl) GetTaskById(id *string) (*model.TaskDTO, error) {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return nil, err
-	}
+func (dao *TaskDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, error) {
 
 	query := fmt.Sprintf("SELECT * FROM task WHERE id='%v'", id)
 
@@ -101,11 +83,7 @@ func (dao *TaskDaoImpl) GetTaskById(id *string) (*model.TaskDTO, error) {
 
 	return result, nil
 }
-func (dao *TaskDaoImpl) GetTasksByIds(ids []*string) (*[]*model.TaskDTO, error) {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return nil, err
-	}
+func (dao *TaskDaoImpl) GetTasksByIds(ids []*string, tx *sql.Tx) (*[]*model.TaskDTO, error) {
 
 	query := fmt.Sprintf("SELECT * FROM task WHERE id IN (%v)", ids)
 

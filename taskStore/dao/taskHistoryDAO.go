@@ -9,28 +9,22 @@ import (
 )
 
 type TaskHistoryDao interface {
-	SaveTaskEntry(entry *model.TaskHistoryDTO) error
+	SaveTaskEntry(entry *model.TaskHistoryDTO, tx *sql.Tx) error
 
-	GetTaskById(id *string) (*model.TaskHistoryDTO, error)
-	GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int) (*[]*model.TaskHistoryDTO, error)
-	GetTaskHistory(id *string) (*[]*model.TaskHistoryDTO, error)
+	GetTaskById(id *string, tx *sql.Tx) (*model.TaskHistoryDTO, error)
+	GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int, tx *sql.Tx) (*[]*model.TaskHistoryDTO, error)
+	GetTaskHistory(id *string, tx *sql.Tx) (*[]*model.TaskHistoryDTO, error)
 }
 
 type TaskHistoryDaoImpl struct {
-	db *Database
 }
 
-func NewTaskHistoryDao(database *Database) *TaskHistoryDaoImpl {
-	return &TaskHistoryDaoImpl{
-		db: database,
-	}
+func NewTaskHistoryDao() *TaskHistoryDaoImpl {
+	return &TaskHistoryDaoImpl{}
 }
 
-func (dao *TaskHistoryDaoImpl) SaveTaskEntry(entry *model.TaskHistoryDTO) error {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return err
-	}
+// TODO move out tx from here
+func (dao *TaskHistoryDaoImpl) SaveTaskEntry(entry *model.TaskHistoryDTO, tx *sql.Tx) error {
 
 	query := fmt.Sprintf("INSERT INTO task_history(task_id,status,updated_at)  VALUES ('%v','%v','%v')", entry.TaskId, entry.Status, entry.UpdatedAt)
 	stmt, err := tx.Prepare(query)
@@ -55,11 +49,7 @@ func (dao *TaskHistoryDaoImpl) SaveTaskEntry(entry *model.TaskHistoryDTO) error 
 }
 
 // get latest status
-func (dao *TaskHistoryDaoImpl) GetTaskById(id *string) (*model.TaskHistoryDTO, error) {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return nil, err
-	}
+func (dao *TaskHistoryDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskHistoryDTO, error) {
 
 	query := fmt.Sprintf("SELECT * FROM task_history WHERE task_id='%v' ORDER BY updated_at ", id)
 
@@ -94,21 +84,13 @@ func (dao *TaskHistoryDaoImpl) GetTaskById(id *string) (*model.TaskHistoryDTO, e
 }
 
 func (dao *TaskHistoryDaoImpl) GetTasksByStatus(status *data.TaskStatus,
-	offset *int, limit *int) (*[]*model.TaskHistoryDTO, error) {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return nil, err
-	}
+	offset *int, limit *int, tx *sql.Tx) (*[]*model.TaskHistoryDTO, error) {
 	query := fmt.Sprintf("SELECT * FROM task_history WHERE status='%v' LIMIT %v OFFSET %v", status, limit, offset)
 
 	return fetchTasks(query, tx)
 }
 
-func (dao *TaskHistoryDaoImpl) GetTaskHistory(id *string) (*[]*model.TaskHistoryDTO, error) {
-	tx, err := dao.db.BeginTx()
-	if err != nil {
-		return nil, err
-	}
+func (dao *TaskHistoryDaoImpl) GetTaskHistory(id *string, tx *sql.Tx) (*[]*model.TaskHistoryDTO, error) {
 	query := fmt.Sprintf("SELECT * FROM task_history WHERE id='%v'", id)
 
 	return fetchTasks(query, tx)
