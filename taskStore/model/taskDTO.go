@@ -1,16 +1,19 @@
 package model
 
-import "github.com/abondar24/TaskDistributor/taskData/data"
+import (
+	"github.com/abondar24/TaskDistributor/taskData/data"
+	"time"
+)
 
 type TaskDTO struct {
-	Id        string `db:"id"`
-	Name      string `db:"name"`
-	CreatedAt string `db:"created_at"`
+	Id        string    `db:"id"`
+	Name      string    `db:"name"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 type TaskHistoryDTO struct {
 	Id        int64           `db:"id"`
 	TaskId    string          `db:"task_id"`
 	Status    data.TaskStatus `db:"status"`
-	UpdatedAt string          `db:"updated_at"`
+	UpdatedAt time.Time       `db:"updated_at"`
 }

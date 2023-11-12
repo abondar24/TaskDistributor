@@ -78,7 +78,6 @@ func (ts *TaskDbService) GetTaskById(id *string) (*data.Task, error) {
 
 func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, limit *int) ([]*data.Task, error) {
 	result := make([]*data.Task, 0)
-
 	statusEntries, err := ts.taskHistoryDAO.GetTasksByStatus(status, offset, limit)
 	if err != nil {
 		return nil, err
