@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/abondar24/TaskDistributor/taskData/config"
 	"github.com/abondar24/TaskDistributor/taskStore/dao"
-	"github.com/abondar24/TaskDistributor/taskStore/health"
 	"github.com/abondar24/TaskDistributor/taskStore/queue"
+	"github.com/abondar24/TaskDistributor/taskStore/server"
 	"github.com/abondar24/TaskDistributor/taskStore/service"
 	"github.com/spf13/viper"
 	"log"
@@ -22,7 +22,8 @@ func main() {
 	amqpConsumer := queue.NewAmqpConsumer(conf, taskService)
 	go amqpConsumer.ReadFromQueue()
 
-	healthCheck := health.NewHealth()
+	taskRPC := server.NewTaskRPC(taskService)
+	healthCheck := server.NewServer(taskRPC)
 	healthCheck.RunServer(strconv.Itoa(conf.Server.Port))
 
 }
