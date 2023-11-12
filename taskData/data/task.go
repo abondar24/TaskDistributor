@@ -1,11 +1,13 @@
 package data
 
+import "time"
+
 type Task struct {
 	ID         string     `json:"id"`
 	Name       string     `json:"name"`
 	Status     TaskStatus `json:"status"`
-	CreateTime string     `json:"createdAt"`
-	UpdateTime string     `json:"updatedAt"`
+	CreateTime time.Time  `json:"createdAt"`
+	UpdateTime time.Time  `json:"updatedAt"`
 }
 
 type TaskStatus = string
