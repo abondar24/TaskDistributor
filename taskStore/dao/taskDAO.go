@@ -24,8 +24,13 @@ func NewTaskDao() *TaskDaoImpl {
 
 func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO, tx *sql.Tx) error {
 
-	query := fmt.Sprintf("INSERT INTO task(id,name,created_at) VALUES ('%v','%v','%v')", task.Id, task.Name, task.CreatedAt)
+	query := fmt.Sprintf("INSERT INTO task(id,name,created_at) VALUES ('%v','%v','%v')", task.Id, task.Name, task.CreatedAt.Format(model.TimeFormat))
 	stmt, err := tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec()
 	if err != nil {
 		return err
 	}
@@ -37,17 +42,12 @@ func (dao *TaskDaoImpl) SaveTask(task *model.TaskDTO, tx *sql.Tx) error {
 		}
 	}(stmt)
 
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func (dao *TaskDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, error) {
 
-	query := fmt.Sprintf("SELECT * FROM task WHERE id='%v'", id)
+	query := fmt.Sprintf("SELECT * FROM task WHERE id='%v'", *id)
 
 	result := &model.TaskDTO{}
 
@@ -56,20 +56,19 @@ func (dao *TaskDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, err
 		return nil, err
 	}
 
-	defer func(stmt *sql.Stmt) {
-		err := stmt.Close()
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}(stmt)
-
 	rows, err := stmt.Query()
 	if err != nil {
 		return nil, err
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&result.Id, &result.Name, &result.CreatedAt)
+		var createdAtRaw sql.RawBytes
+		err := rows.Scan(&result.Id, &result.Name, &createdAtRaw)
+		if err != nil {
+			return nil, err
+		}
+
+		result.CreatedAt, err = ConvertTime(createdAtRaw)
 		if err != nil {
 			return nil, err
 		}
@@ -88,13 +87,6 @@ func (dao *TaskDaoImpl) GetTasksByIds(ids []*string, tx *sql.Tx) (*[]*model.Task
 		return nil, err
 	}
 
-	defer func(stmt *sql.Stmt) {
-		err := stmt.Close()
-		if err != nil {
-			log.Println(err.Error())
-		}
-	}(stmt)
-
 	rows, err := stmt.Query()
 	if err != nil {
 		return nil, err
@@ -102,12 +94,27 @@ func (dao *TaskDaoImpl) GetTasksByIds(ids []*string, tx *sql.Tx) (*[]*model.Task
 
 	for rows.Next() {
 		task := model.TaskDTO{}
-		err := rows.Scan(&task.Id, &task.Name, &task.CreatedAt)
+		var createdAtRaw sql.RawBytes
+
+		err := rows.Scan(&task.Id, &task.Name, &createdAtRaw)
 		if err != nil {
 			return nil, err
 		}
+
+		task.CreatedAt, err = ConvertTime(createdAtRaw)
+		if err != nil {
+			return nil, err
+		}
+
 		result = append(result, &task)
 	}
+
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Println(err.Error())
+		}
+	}(stmt)
 
 	return &result, nil
 }

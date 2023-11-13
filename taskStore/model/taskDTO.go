@@ -17,3 +17,7 @@ type TaskHistoryDTO struct {
 	Status    data.TaskStatus `db:"status"`
 	UpdatedAt time.Time       `db:"updated_at"`
 }
+
+const (
+	TimeFormat = "2006-01-02 15:04:05"
+)
