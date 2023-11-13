@@ -1,14 +1,13 @@
 package server
 
 import (
-	"encoding/json"
+	jsonparse "encoding/json"
 	"github.com/abondar24/TaskDistributor/taskData/response"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/rpc"
+	"github.com/gorilla/rpc/json"
 	"log"
-	"net"
 	"net/http"
-	"net/rpc"
-	"net/rpc/jsonrpc"
 )
 
 type Server struct {
@@ -26,13 +25,15 @@ func NewServer(taskRPC *TaskRPC) *Server {
 
 func (srv *Server) RunServer(port string) {
 
-	err := rpc.Register(srv.taskRPC)
+	rpcSrv := rpc.NewServer()
+	rpcSrv.RegisterCodec(json.NewCodec(), "application/json")
+	err := rpcSrv.RegisterService(srv.taskRPC, "TaskRPC")
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
 
-	srv.router.HandleFunc("/server", healthHandler).Methods("GET")
-	srv.router.HandleFunc("/rpc", rpcHandler).Methods("POST")
+	srv.router.HandleFunc("/health", healthHandler).Methods("GET")
+	srv.router.Handle("/rpc", rpcSrv).Methods("POST")
 
 	http.Handle("/", srv.router)
 	err = http.ListenAndServe("localhost:"+port, nil)
@@ -45,28 +46,9 @@ func (srv *Server) RunServer(port string) {
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(response.HealthResponse{MESSAGE: "Task Store is up"})
-
-}
-
-func rpcHandler(w http.ResponseWriter, r *http.Request) {
-	hijacker, ok := w.(http.Hijacker)
-	if !ok {
-		http.Error(w, "Webserver doesn't support hijacking", http.StatusInternalServerError)
-		return
-	}
-
-	conn, _, err := hijacker.Hijack()
+	err := jsonparse.NewEncoder(w).Encode(response.HealthResponse{MESSAGE: "Task Store is up"})
 	if err != nil {
-		http.Error(w, "Failed to hijack connection", http.StatusInternalServerError)
-		return
+		log.Fatalln(err.Error())
 	}
-	defer func(conn net.Conn) {
-		err := conn.Close()
-		if err != nil {
-			log.Fatalln(err.Error())
-		}
-	}(conn)
 
-	jsonrpc.ServeConn(conn)
 }
