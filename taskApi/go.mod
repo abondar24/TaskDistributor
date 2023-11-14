@@ -44,7 +44,7 @@ require (
 )
 
 require (
-	github.com/abondar24/TaskDistributor/taskData v0.0.0-20231112121104-4d631bfdd2d9
+	github.com/abondar24/TaskDistributor/taskData v0.0.0-20231114203642-1e40a98f79ed
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/spf13/viper v1.17.0
