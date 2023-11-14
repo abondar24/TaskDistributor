@@ -95,7 +95,7 @@ func (dao *TaskHistoryDaoImpl) GetTasksByStatus(status *data.TaskStatus,
 }
 
 func (dao *TaskHistoryDaoImpl) GetTaskHistory(id *string, tx *sql.Tx) (*[]*model.TaskHistoryDTO, error) {
-	query := fmt.Sprintf("SELECT * FROM task_history WHERE id='%v'", id)
+	query := fmt.Sprintf("SELECT * FROM task_history WHERE task_id='%v'", *id)
 
 	return fetchTasks(query, tx)
 }
