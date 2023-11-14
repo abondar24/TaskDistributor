@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/abondar24/TaskDistributor/taskData/args"
 	"github.com/abondar24/TaskDistributor/taskData/data"
 	"github.com/abondar24/TaskDistributor/taskStore/service"
 	"log"
@@ -31,25 +32,18 @@ func (tr *TaskRPC) GetTask(r *http.Request, id *string, response *data.Task) err
 
 	*response = *res
 
-	log.Println("Got response")
-	log.Println(response)
-
 	return nil
 }
 
-// TODO fix method not found
-func (tr *TaskRPC) GetTasksByStatus(r *http.Request, status *data.TaskStatus, offset *int, limit *int, response *[]*data.Task) error {
-	log.Printf("Fetching tasks by status %s\n", *status)
+func (tr *TaskRPC) GetTasksByStatus(r *http.Request, args *args.StatusArgs, response *[]*data.Task) error {
+	log.Printf("Fetching tasks by status %s\n", *args.Status)
 
-	res, err := tr.taskService.GetTasksByStatus(status, offset, limit)
+	res, err := tr.taskService.GetTasksByStatus(args.Status, args.Offset, args.Limit)
 	if err != nil {
 		return err
 	}
 
 	*response = res
-
-	log.Println("Got response")
-	log.Println(response)
 
 	return nil
 }
@@ -63,9 +57,6 @@ func (tr *TaskRPC) GetTaskHistory(r *http.Request, id *string, response *data.Ta
 	}
 
 	*response = *res
-
-	log.Println("Got response")
-	log.Println(response)
 
 	return nil
 }

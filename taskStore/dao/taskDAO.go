@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/abondar24/TaskDistributor/taskStore/model"
 	"log"
+	"strings"
 )
 
 type TaskDao interface {
@@ -12,7 +13,7 @@ type TaskDao interface {
 
 	GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, error)
 
-	GetTasksByIds(ids []*string, tx *sql.Tx) (*[]*model.TaskDTO, error)
+	GetTasksByIds(ids *[]string, tx *sql.Tx) (*[]*model.TaskDTO, error)
 }
 
 type TaskDaoImpl struct {
@@ -76,9 +77,11 @@ func (dao *TaskDaoImpl) GetTaskById(id *string, tx *sql.Tx) (*model.TaskDTO, err
 
 	return result, nil
 }
-func (dao *TaskDaoImpl) GetTasksByIds(ids []*string, tx *sql.Tx) (*[]*model.TaskDTO, error) {
+func (dao *TaskDaoImpl) GetTasksByIds(ids *[]string, tx *sql.Tx) (*[]*model.TaskDTO, error) {
 
-	query := fmt.Sprintf("SELECT * FROM task WHERE id IN (%v)", ids)
+	queryIds := strings.Join(*ids, ",")
+
+	query := fmt.Sprintf("SELECT * FROM task WHERE id IN ('%v')", queryIds)
 
 	result := make([]*model.TaskDTO, 0)
 

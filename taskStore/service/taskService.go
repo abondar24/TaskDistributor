@@ -115,13 +115,13 @@ func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, 
 		return nil, err
 	}
 
-	ids := make([]*string, 0)
+	ids := make([]string, 0)
 
 	for _, se := range *statusEntries {
-		ids = append(ids, &se.TaskId)
+		ids = append(ids, se.TaskId)
 	}
 
-	tasks, err := ts.taskDAO.GetTasksByIds(ids, tx)
+	tasks, err := ts.taskDAO.GetTasksByIds(&ids, tx)
 	if err != nil {
 		ts.db.RollbackTx(tx)
 		return nil, err
@@ -141,9 +141,11 @@ func (ts *TaskDbService) GetTasksByStatus(status *data.TaskStatus, offset *int, 
 		result = append(result, task)
 	}
 
-	for i, se := range *statusEntries {
-		result[i].Status = se.Status
-		result[i].UpdateTime = se.UpdatedAt
+	if len(result) > 0 {
+		for i, se := range *statusEntries {
+			result[i].Status = se.Status
+			result[i].UpdateTime = se.UpdatedAt
+		}
 	}
 
 	return result, nil
