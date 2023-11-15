@@ -9,6 +9,7 @@ type Config struct {
 	Server   ServerConfig
 	Broker   BrokerConfig
 	Database DatabaseConfig
+	RPC      RpcServerConfig
 }
 
 type ServerConfig struct {
@@ -33,7 +34,7 @@ type DatabaseConfig struct {
 	MigrationPath string
 }
 
-type RpcServer struct {
+type RpcServerConfig struct {
 	Host string
 	Port int
 }
