@@ -4,7 +4,7 @@ Part of task distributor running on port 8080 and accepting tasks.
 
 ## API reference
 ```
-http://localhost:8080/swagger/index.htm
+http://localhost:8080/swagger/index.html
 ```
 
 ## Build and run

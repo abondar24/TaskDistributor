@@ -10,6 +10,7 @@ TBA
 ## MicroServices
 
 - [TaskAPI](taskApi/README.md) - command API for sending tasks and updating them 
+- [TaskStore](taskStore/README.md) - service accepting commands via RabbitMQ and saving it to DB. Exposes JSON-RPC API for reading
 
 ## Build and run
 Each module has its makefile.
@@ -33,6 +34,7 @@ Both require mockgen and swag installed to the system via go install
 ## External services
 
 1. RabbitMQ - runs on default port with credentials "admin:admin217"
+2. MariaDB - runs on default port with credentials "root:root4db"
 
 ## Health
 Each microservice has /health endpoint to make sure it started 
