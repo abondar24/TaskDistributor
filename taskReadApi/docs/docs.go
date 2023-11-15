@@ -49,7 +49,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Wrong id param",
+                        "description": "Missing id param",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }

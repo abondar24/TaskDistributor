@@ -87,7 +87,7 @@ func TestRequestHandler_CreateTaskHandlerError(t *testing.T) {
 			rr.Code, http.StatusBadGateway)
 	}
 
-	var errorResp model.ErrorResponse
+	var errorResp response.ErrorResponse
 	err = json.Unmarshal(rr.Body.Bytes(), &errorResp)
 	if err != nil {
 		t.Fatal(err)
@@ -144,13 +144,13 @@ func TestRequestHandler_UpdateTaskHandlerIdMissing(t *testing.T) {
 			rr.Code, http.StatusBadRequest)
 	}
 
-	var errorResp model.ErrorResponse
+	var errorResp response.ErrorResponse
 	err = json.Unmarshal(rr.Body.Bytes(), &errorResp)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, "missing ID", errorResp.ERROR)
+	assert.Equal(t, "wrong ID", errorResp.ERROR)
 }
 
 func TestRequestHandler_UpdateTaskHandlerNoComplete(t *testing.T) {

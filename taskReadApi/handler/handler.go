@@ -74,7 +74,7 @@ func (h *RequestHandler) GetTasksByStatusHandler(w http.ResponseWriter, r *http.
 	vars := mux.Vars(r)
 	status, ok := vars["status"]
 	if !ok {
-		handleError(errors.New("wrong status"), w, http.StatusBadRequest)
+		handleError(errors.New("missing status"), w, http.StatusBadRequest)
 		return
 	}
 
@@ -88,13 +88,22 @@ func (h *RequestHandler) GetTasksByStatusHandler(w http.ResponseWriter, r *http.
 	taskStatus, err := readStatus(&status, &statusMap)
 	if err != nil {
 		handleError(err, w, http.StatusBadRequest)
+		return
 	}
 
 	offsetStr := r.URL.Query().Get("offset")
-	offset := readParam(offsetStr, w)
+	offset, err := readParam(offsetStr)
+	if err != nil {
+		handleError(err, w, http.StatusBadRequest)
+		return
+	}
 
 	limitStr := r.URL.Query().Get("limit")
-	limit := readParam(limitStr, w)
+	limit, err := readParam(limitStr)
+	if err != nil {
+		handleError(err, w, http.StatusBadRequest)
+		return
+	}
 
 	args := rpc.StatusArgs{
 		Status: taskStatus,
@@ -121,7 +130,7 @@ func (h *RequestHandler) GetTasksByStatusHandler(w http.ResponseWriter, r *http.
 // @Produce  json
 // @Param id path string true "Task ID"
 // @Success 200 {object} data.TaskHistory "Task with status changes history"
-// @Failure 400 {object} response.ErrorResponse "Wrong id param"
+// @Failure 400 {object} response.ErrorResponse "Missing id param"
 // @Failure 502 {object} response.ErrorResponse "Failed to read from store"
 // @Router /task/history/{id} [get]
 func (h *RequestHandler) GetTaskHistoryHandler(w http.ResponseWriter, r *http.Request) {
@@ -130,7 +139,7 @@ func (h *RequestHandler) GetTaskHistoryHandler(w http.ResponseWriter, r *http.Re
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
-		handleError(errors.New("wrong ID"), w, http.StatusBadRequest)
+		handleError(errors.New("missing ID"), w, http.StatusBadRequest)
 		return
 	}
 
@@ -159,19 +168,17 @@ func handleError(err error, w http.ResponseWriter, errCode int) {
 	}
 }
 
-func readParam(param string, w http.ResponseWriter) int {
+func readParam(param string) (int, error) {
 	if param == "" {
-		handleError(errors.New("missing parameter"), w, http.StatusBadRequest)
-		return -1
+		return -1, errors.New("missing parameter")
 	}
 
 	res, err := strconv.Atoi(param)
 	if err != nil {
-		handleError(errors.New("wrong parameter"), w, http.StatusBadRequest)
-		return -1
+		return -1, errors.New("wrong parameter")
 	}
 
-	return res
+	return res, nil
 }
 
 func readStatus(status *string, statusMap *map[string]data.TaskStatus) (*data.TaskStatus, error) {
