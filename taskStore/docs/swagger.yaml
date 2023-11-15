@@ -1,0 +1,104 @@
+basePath: /
+definitions:
+  data.Task:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        $ref: '#/definitions/data.TaskStatus'
+      updatedAt:
+        type: string
+    type: object
+  data.TaskHistory:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      statusHistory:
+        items:
+          $ref: '#/definitions/data.TaskStatusEntry'
+        type: array
+    type: object
+  data.TaskStatus:
+    enum:
+    - created
+    - updated
+    - deleted
+    - completed
+    type: string
+    x-enum-varnames:
+    - TASK_CREATED
+    - TASK_UPDATED
+    - TASK_DELETED
+    - TASK_COMPLETED
+  data.TaskStatusEntry:
+    properties:
+      status:
+        $ref: '#/definitions/data.TaskStatus'
+      updated_at:
+        type: string
+    type: object
+  rpc.TaskRPCRequest:
+    properties:
+      id:
+        description: request id
+        type: integer
+      jsonrpc:
+        description: json-rpc version 2
+        type: string
+      method:
+        description: 'json-rpc method: TaskRPC.GetTask, TaskRPC.GetTaskHistory'
+        type: string
+      params:
+        description: params
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8081
+info:
+  contact:
+    email: abondar24@yahoo.com
+    name: Alex
+  description: Task store - accepts commands and exposes JSON-RPC API
+  license:
+    name: MIT
+  termsOfService: http://swagger.io/terms/
+  version: "1.0"
+paths:
+  /rpc:
+    post:
+      consumes:
+      - application/json
+      description: fetch task by id,status or history
+      parameters:
+      - description: RPC Request
+        in: body
+        name: rpcRequest
+        required: true
+        schema:
+          $ref: '#/definitions/rpc.TaskRPCRequest'
+      - description: RPC Request for status
+        in: body
+        name: rpcRequest
+        required: true
+        schema:
+          $ref: '#/definitions/rpc.TaskRPCRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.TaskHistory'
+      summary: Get taks
+      tags:
+      - tasks
+swagger: "2.0"
