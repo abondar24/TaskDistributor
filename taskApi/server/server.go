@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"net/http"
+	"strconv"
 )
 
 type Server struct {
@@ -31,7 +32,7 @@ func NewServer(requestHandler *handler.RequestHandler) *Server {
 // @host localhost:8080
 // @BasePath /
 
-func (s *Server) RunServer(port string) {
+func (s *Server) RunServer(port int) {
 
 	s.router.HandleFunc("/task", s.requestHandler.CreateTaskHandler).Methods("POST")
 	s.router.HandleFunc("/task/{id}", s.requestHandler.UpdateTaskHandler).Methods("PUT")
@@ -40,7 +41,7 @@ func (s *Server) RunServer(port string) {
 	s.router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 
 	http.Handle("/", s.router)
-	err := http.ListenAndServe("localhost:"+port, nil)
+	err := http.ListenAndServe("localhost:"+strconv.Itoa(port), nil)
 	if err != nil {
 		panic(err)
 		return

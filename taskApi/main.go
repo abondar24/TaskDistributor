@@ -6,7 +6,6 @@ import (
 	"github.com/abondar24/TaskDistributor/taskApi/server"
 	"github.com/abondar24/TaskDistributor/taskApi/service"
 	"github.com/abondar24/TaskDistributor/taskData/config"
-	"strconv"
 )
 
 func main() {
@@ -16,5 +15,5 @@ func main() {
 	requestHandler := handler.NewRequestHandler(taskService)
 
 	srv := server.NewServer(requestHandler)
-	srv.RunServer(strconv.Itoa(conf.Server.Port))
+	srv.RunServer(conf.Server.Port)
 }

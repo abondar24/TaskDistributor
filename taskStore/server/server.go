@@ -10,6 +10,7 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Server struct {
@@ -34,7 +35,7 @@ func NewServer(taskRPC *TaskRPC) *Server {
 // @license.name MIT
 // @host localhost:8081
 // @BasePath /
-func (srv *Server) RunServer(port string) {
+func (srv *Server) RunServer(port int) {
 
 	rpcSrv := rpc.NewServer()
 	rpcSrv.RegisterCodec(json.NewCodec(), "application/json")
@@ -48,7 +49,7 @@ func (srv *Server) RunServer(port string) {
 	srv.router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 
 	http.Handle("/", srv.router)
-	err = http.ListenAndServe("localhost:"+port, nil)
+	err = http.ListenAndServe("localhost:"+strconv.Itoa(port), nil)
 	if err != nil {
 		panic(err)
 		return

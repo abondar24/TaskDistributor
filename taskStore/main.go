@@ -6,7 +6,6 @@ import (
 	"github.com/abondar24/TaskDistributor/taskStore/queue"
 	"github.com/abondar24/TaskDistributor/taskStore/server"
 	"github.com/abondar24/TaskDistributor/taskStore/service"
-	"strconv"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 	go amqpConsumer.ReadFromQueue()
 
 	taskRPC := server.NewTaskRPC(taskService)
-	healthCheck := server.NewServer(taskRPC)
-	healthCheck.RunServer(strconv.Itoa(conf.Server.Port))
+	storeServer := server.NewServer(taskRPC)
+	storeServer.RunServer(conf.Server.Port)
 
 }
