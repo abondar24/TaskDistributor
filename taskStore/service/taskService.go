@@ -7,7 +7,7 @@ import (
 )
 
 type TaskDbService struct {
-	db             *dao.Database
+	db             StoreService
 	taskDAO        dao.TaskDao
 	taskHistoryDAO dao.TaskHistoryDao
 }
@@ -20,7 +20,7 @@ type TaskService interface {
 	GetTaskHistory(id *string) (*data.TaskHistory, error)
 }
 
-func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao, database *dao.Database) *TaskDbService {
+func NewTaskService(taskDao dao.TaskDao, historyDao dao.TaskHistoryDao, database StoreService) *TaskDbService {
 	return &TaskDbService{
 		taskDAO:        taskDao,
 		taskHistoryDAO: historyDao,

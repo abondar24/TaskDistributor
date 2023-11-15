@@ -14,7 +14,7 @@ import (
 func main() {
 	conf := readConfig()
 
-	db := dao.InitDatabase(conf)
+	db := service.InitDatabase(conf)
 	taskDao := dao.NewTaskDao()
 	taskHistoryDao := dao.NewTaskHistoryDao()
 	taskService := service.NewTaskService(taskDao, taskHistoryDao, db)
