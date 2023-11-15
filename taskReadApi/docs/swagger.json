@@ -1,0 +1,236 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Task API to read tasks from store",
+        "title": "Task Read API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Alex",
+            "email": "abondar24@yahoo.com"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8082",
+    "basePath": "/",
+    "paths": {
+        "/task/history/{id}": {
+            "get": {
+                "description": "Fetch task status update history by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get task history",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task with status changes history",
+                        "schema": {
+                            "$ref": "#/definitions/data.TaskHistory"
+                        }
+                    },
+                    "400": {
+                        "description": "Wrong id param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to read from store",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/{id}": {
+            "get": {
+                "description": "Fetch task by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task with latest status",
+                        "schema": {
+                            "$ref": "#/definitions/data.Task"
+                        }
+                    },
+                    "400": {
+                        "description": "Wrong id param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to read from store",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{status}": {
+            "get": {
+                "description": "Fetch tasks by specific status with offset and limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Get tasks by status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task Status",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Offset - from which task to fetch",
+                        "name": "offset",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Limit - how many tasks to fetch",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tasks with specific status",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.Task"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Wrong path or query param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to read from store",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "data.Task": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/data.TaskStatus"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "data.TaskHistory": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "statusHistory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.TaskStatusEntry"
+                    }
+                }
+            }
+        },
+        "data.TaskStatus": {
+            "type": "string",
+            "enum": [
+                "created",
+                "updated",
+                "deleted",
+                "completed"
+            ],
+            "x-enum-varnames": [
+                "TASK_CREATED",
+                "TASK_UPDATED",
+                "TASK_DELETED",
+                "TASK_COMPLETED"
+            ]
+        },
+        "data.TaskStatusEntry": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "$ref": "#/definitions/data.TaskStatus"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
