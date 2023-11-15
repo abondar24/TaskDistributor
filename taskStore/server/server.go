@@ -23,6 +23,8 @@ func NewServer(taskRPC *TaskRPC) *Server {
 	}
 }
 
+// TODO: add swagger description
+// TODO: test rpc via handler test
 func (srv *Server) RunServer(port string) {
 
 	rpcSrv := rpc.NewServer()
