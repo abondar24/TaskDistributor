@@ -15,6 +15,8 @@ install:
 get:
 	@go get ./...
 
+swagger:
+	@swag init -g server/server.go --parseDependency
 
 mocks:
 	@mockgen -source=$(SOURCE) -destination=$(DESTINATION) -package=$(PACKAGE)

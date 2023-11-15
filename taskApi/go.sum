@@ -58,6 +58,12 @@ github.com/abondar24/TaskDistributor/taskData v0.0.0-20231112121104-4d631bfdd2d9
 github.com/abondar24/TaskDistributor/taskData v0.0.0-20231112121104-4d631bfdd2d9/go.mod h1:D+a7X3iQgM6o7I+M9CJcianSt96dINWOu5z+Bvojcbo=
 github.com/abondar24/TaskDistributor/taskData v0.0.0-20231114203642-1e40a98f79ed h1:uSVYoxWUs/If0Xy2hJTroG8XvmGTsi4y/2fG1JBV3fY=
 github.com/abondar24/TaskDistributor/taskData v0.0.0-20231114203642-1e40a98f79ed/go.mod h1:D+a7X3iQgM6o7I+M9CJcianSt96dINWOu5z+Bvojcbo=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115124716-72603571e77c h1:OF+PomYqh3DGkL/SOWKcWmCpVdEuocL0zH0ICl3XJRo=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115124716-72603571e77c/go.mod h1:D+a7X3iQgM6o7I+M9CJcianSt96dINWOu5z+Bvojcbo=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115135245-526e0a4876fb h1:BDXg4ggFxJeSs/ci0YQBB7LZM7wyMJOJP2NDf7p/Mt4=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115135245-526e0a4876fb/go.mod h1:D+a7X3iQgM6o7I+M9CJcianSt96dINWOu5z+Bvojcbo=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115140313-d29c562aa7fc h1:wFgCofHTjse61lZbAdvHZ3MJ9PhkvfDz5kbKRBpiFcA=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115140313-d29c562aa7fc/go.mod h1:D+a7X3iQgM6o7I+M9CJcianSt96dINWOu5z+Bvojcbo=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=

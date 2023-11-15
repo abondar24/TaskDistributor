@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/abondar24/TaskDistributor/taskData/args"
 	"github.com/abondar24/TaskDistributor/taskData/data"
+	"github.com/abondar24/TaskDistributor/taskData/rpc"
 	"github.com/abondar24/TaskDistributor/taskStore/service"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -47,7 +47,7 @@ func TestTaskRPC_GetTaskByStatus(t *testing.T) {
 	limit := 1
 	taskStatus := data.TASK_CREATED
 
-	queryArgs := args.StatusArgs{
+	queryArgs := rpc.StatusArgs{
 		Status: &taskStatus,
 		Offset: &offset,
 		Limit:  &limit,

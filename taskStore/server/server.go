@@ -3,9 +3,11 @@ package server
 import (
 	jsonparse "encoding/json"
 	"github.com/abondar24/TaskDistributor/taskData/response"
+	_ "github.com/abondar24/TaskDistributor/taskStore/docs"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/rpc"
 	"github.com/gorilla/rpc/json"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
 )
@@ -23,8 +25,15 @@ func NewServer(taskRPC *TaskRPC) *Server {
 	}
 }
 
-// TODO: add swagger description
-// TODO: test rpc via handler test
+// RunServer @title Task Store
+// @version 1.0
+// @description Task store - accepts commands and exposes JSON-RPC API
+// @termsOfService http://swagger.io/terms/
+// @contact.name Alex
+// @contact.email abondar24@yahoo.com
+// @license.name MIT
+// @host localhost:8081
+// @BasePath /
 func (srv *Server) RunServer(port string) {
 
 	rpcSrv := rpc.NewServer()
@@ -36,6 +45,7 @@ func (srv *Server) RunServer(port string) {
 
 	srv.router.HandleFunc("/health", healthHandler).Methods("GET")
 	srv.router.Handle("/rpc", rpcSrv).Methods("POST")
+	srv.router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 
 	http.Handle("/", srv.router)
 	err = http.ListenAndServe("localhost:"+port, nil)
