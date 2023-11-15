@@ -11,6 +11,7 @@ TBA
 
 - [TaskAPI](taskApi/README.md) - command API for sending tasks and updating them 
 - [TaskStore](taskStore/README.md) - service accepting commands via RabbitMQ and saving it to DB. Exposes JSON-RPC API for reading
+- [TaskData](taskData/README.md) - common data structures
 
 ## Build and run
 Each module has its makefile.
