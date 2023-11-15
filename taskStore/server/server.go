@@ -18,9 +18,9 @@ type Server struct {
 }
 
 func NewServer(taskRPC *TaskRPC) *Server {
-	healthRouter := mux.NewRouter().StrictSlash(true)
+	router := mux.NewRouter().StrictSlash(true)
 	return &Server{
-		healthRouter,
+		router,
 		taskRPC,
 	}
 }
