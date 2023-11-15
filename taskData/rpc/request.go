@@ -5,7 +5,7 @@ type TaskRPCRequest struct {
 	// json-rpc version 2
 	JSONRPC string `json:"jsonrpc"`
 
-	// json-rpc method
+	// json-rpc method: TaskRPC.GetTask, TaskRPC.GetTaskHistory
 	Method string `json:"method"`
 
 	// params
@@ -20,7 +20,7 @@ type TaskRPCStatusRequest struct {
 	// json-rpc version 2
 	JSONRPC string `json:"jsonrpc"`
 
-	// json-rpc method
+	// json-rpc method: TaskRPC.GetTasksByStatus,
 	Method string `json:"method"`
 
 	// params
