@@ -1,6 +1,6 @@
 # Task API
 
-Part of task distributor running on port 8080 and accepting tasks.
+Part of task distributor accepting and sending to store tasks.
 
 ## API reference
 ```

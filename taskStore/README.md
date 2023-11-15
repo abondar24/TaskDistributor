@@ -1,6 +1,6 @@
 # Task Store
 
-Part of task distributor running on port 8081 and saving tasks to database.
+Part of task distributor saving tasks to database.
 
 ## API reference
 ```

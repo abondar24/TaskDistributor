@@ -4,13 +4,17 @@ Tiny example to show CQRS implementation using Go.
 
 
 ## Design
-TBA
+
+Tiny design of the "system" with main components and interactions in between
+
+![Design](./design.png)
 
 
 ## MicroServices
 
 - [TaskAPI](taskApi/README.md) - command API for sending tasks and updating them 
 - [TaskStore](taskStore/README.md) - service accepting commands via RabbitMQ and saving it to DB. Exposes JSON-RPC API for reading
+- [TaskReadAPI](taskReadApi/README.md) - service reading tasks from store
 - [TaskData](taskData/README.md) - common data structures
 
 ## Build and run
