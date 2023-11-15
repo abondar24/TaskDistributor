@@ -33,6 +33,11 @@ type DatabaseConfig struct {
 	MigrationPath string
 }
 
+type RpcServer struct {
+	Host string
+	Port int
+}
+
 func ReadConfig() *Config {
 	viper.SetConfigFile("config.yaml")
 	err := viper.ReadInConfig()
