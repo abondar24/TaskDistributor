@@ -2,6 +2,9 @@ package data
 
 import "time"
 
+// Task represents a task.
+//
+// swagger:model
 type Task struct {
 	ID         string     `json:"id"`
 	Name       string     `json:"name"`

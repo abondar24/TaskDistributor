@@ -1,4 +1,4 @@
-package args
+package rpc
 
 import "github.com/abondar24/TaskDistributor/taskData/data"
 
