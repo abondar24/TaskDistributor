@@ -56,7 +56,7 @@ func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Produce  json
 // @Param id path string true "Task ID"
 // @Param complete query string true "Complete task. Possible values: true/false"
-// @Failure 400 {object} response.ErrorResponse "Missing id or completed param"
+// @Failure 400 {object} response.ErrorResponse "Wrong id or completed param"
 // @Failure 502 {object} response.ErrorResponse "Failed to send command"
 // @Router /task/{id} [put]
 func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,13 +65,13 @@ func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Reques
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
-		handleError(errors.New("missing ID"), w, http.StatusBadRequest)
+		handleError(errors.New("wrong ID"), w, http.StatusBadRequest)
 		return
 	}
 
 	completeStr := r.URL.Query().Get("complete")
 	if completeStr == "" {
-		handleError(errors.New("missing 'complete' parameter"), w, http.StatusBadRequest)
+		handleError(errors.New("wrong 'complete' parameter value"), w, http.StatusBadRequest)
 		return
 	}
 
@@ -95,7 +95,7 @@ func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Tags tasks
 // @Produce  json
 // @Param id path string true "Task ID"
-// @Failure 400 {object} response.ErrorResponse "Missing id param"
+// @Failure 400 {object} response.ErrorResponse "Wrong id param"
 // @Failure 502 {object} response.ErrorResponse "Failed to send command"
 // @Router /task/{id} [delete]
 func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {

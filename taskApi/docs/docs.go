@@ -90,7 +90,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "400": {
-                        "description": "Missing id or completed param",
+                        "description": "Wrong id or completed param",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -123,7 +123,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "400": {
-                        "description": "Missing id param",
+                        "description": "Wrong id param",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
