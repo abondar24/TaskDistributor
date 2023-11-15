@@ -30,7 +30,7 @@ func NewRequestHandler(taskService service.TaskService) *RequestHandler {
 // @Produce  json
 // @Param task body model.TaskRequest  true "Task name"
 // @Success 200 {object} model.TaskResponse
-// @BadGateway 502 {object} model.ErrorResponse
+// @Failure 502 {object} response.ErrorResponse "Failed to send command"
 // @Router /task [post]
 func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -56,8 +56,8 @@ func (h *RequestHandler) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Produce  json
 // @Param id path string true "Task ID"
 // @Param complete query string true "Complete task. Possible values: true/false"
-// @BadRequest 400 {object} model.ErrorResponse
-// @BadGateway 502 {object} model.ErrorResponse
+// @Failure 400 {object} response.ErrorResponse "Missing id or completed param"
+// @Failure 502 {object} response.ErrorResponse "Failed to send command"
 // @Router /task/{id} [put]
 func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -95,8 +95,8 @@ func (h *RequestHandler) UpdateTaskHandler(w http.ResponseWriter, r *http.Reques
 // @Tags tasks
 // @Produce  json
 // @Param id path string true "Task ID"
-// @BadRequest 400 {object} model.ErrorResponse
-// @BadGateway 502 {object} model.ErrorResponse
+// @Failure 400 {object} response.ErrorResponse "Missing id param"
+// @Failure 502 {object} response.ErrorResponse "Failed to send command"
 // @Router /task/{id} [delete]
 func (h *RequestHandler) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -120,7 +120,7 @@ func (h *RequestHandler) HealthHandler(w http.ResponseWriter, r *http.Request) {
 
 func handleError(err error, w http.ResponseWriter, errCode int) {
 	log.Println(err.Error())
-	errorResp := &model.ErrorResponse{
+	errorResp := &response.ErrorResponse{
 		ERROR: err.Error(),
 	}
 	w.WriteHeader(errCode)

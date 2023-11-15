@@ -10,6 +10,11 @@ definitions:
       taskId:
         type: string
     type: object
+  response.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -41,6 +46,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.TaskResponse'
+        "502":
+          description: Failed to send command
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Create a new task
       tags:
       - tasks
@@ -55,7 +64,15 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "400":
+          description: Missing id param
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "502":
+          description: Failed to send command
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Delete task
       tags:
       - tasks
@@ -74,7 +91,15 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "400":
+          description: Missing id or completed param
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "502":
+          description: Failed to send command
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Update task
       tags:
       - tasks

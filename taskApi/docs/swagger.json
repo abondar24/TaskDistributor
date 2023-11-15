@@ -46,6 +46,12 @@
                         "schema": {
                             "$ref": "#/definitions/model.TaskResponse"
                         }
+                    },
+                    "502": {
+                        "description": "Failed to send command",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
                     }
                 }
             }
@@ -76,7 +82,20 @@
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "400": {
+                        "description": "Missing id or completed param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to send command",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
             },
             "delete": {
                 "description": "Delete existing task",
@@ -96,7 +115,20 @@
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "400": {
+                        "description": "Missing id param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to send command",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
             }
         }
     },
@@ -113,6 +145,14 @@
             "type": "object",
             "properties": {
                 "taskId": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

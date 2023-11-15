@@ -3,7 +3,7 @@ module github.com/abondar24/TaskDistributor/taskStore
 go 1.21.3
 
 require (
-	github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115142524-39646c9a9695
+	github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115150547-e452129243f3
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.1

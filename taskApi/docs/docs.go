@@ -42,7 +42,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/data.TaskRequest"
+                            "$ref": "#/definitions/model.TaskRequest"
                         }
                     }
                 ],
@@ -50,7 +50,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.TaskResponse"
+                            "$ref": "#/definitions/model.TaskResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to send command",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -82,7 +88,20 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "400": {
+                        "description": "Missing id or completed param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to send command",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
             },
             "delete": {
                 "description": "Delete existing task",
@@ -102,12 +121,25 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "400": {
+                        "description": "Missing id param",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to send command",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
             }
         }
     },
     "definitions": {
-        "data.TaskRequest": {
+        "model.TaskRequest": {
             "type": "object",
             "properties": {
                 "taskName": {
@@ -115,10 +147,18 @@ const docTemplate = `{
                 }
             }
         },
-        "data.TaskResponse": {
+        "model.TaskResponse": {
             "type": "object",
             "properties": {
                 "taskId": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

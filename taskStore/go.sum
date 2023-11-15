@@ -42,6 +42,12 @@ github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
 github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115142524-39646c9a9695 h1:tOy//JNyFNSuLKXcH1ofKrX9itFJtURpZIsUSWXfH8I=
 github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115142524-39646c9a9695/go.mod h1:yBkvADY3vx+jlN5bq+bJP1RZVVPAKqTuZS9kkVGUiko=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115144626-fdafd93eaec6 h1:s+Y/9iSpoW0DQor5RG/jYwh2N8emszFToDfJPi0nfjU=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115144626-fdafd93eaec6/go.mod h1:yBkvADY3vx+jlN5bq+bJP1RZVVPAKqTuZS9kkVGUiko=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115144903-08aa6266a03b h1:6aCkMQcMXJ7LNmfMezLf8RMnI4BzOUbOSrcs2S11izU=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115144903-08aa6266a03b/go.mod h1:yBkvADY3vx+jlN5bq+bJP1RZVVPAKqTuZS9kkVGUiko=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115150547-e452129243f3 h1:TgGbv84d9JfQnMm+6UDUWm6gi6W74c3S/PH+wemuJ/s=
+github.com/abondar24/TaskDistributor/taskData v0.0.0-20231115150547-e452129243f3/go.mod h1:yBkvADY3vx+jlN5bq+bJP1RZVVPAKqTuZS9kkVGUiko=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
